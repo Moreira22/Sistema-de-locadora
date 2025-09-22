@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+
+    <changeSet id="1758569505852-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_usuario" startValue="1"/>
+        <createTable tableName="funcionario">
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_funcionario"/>
+            </column>
+            <column name="cargo" type="VARCHAR(255)"/>
+            <column name="salario" type="DOUBLE"/>
+            <column name="data_admissao" type="DATE"/>
+            <column name="data_demissao" type="DATE"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="usuario_id" baseTableName="funcionario"
+                                 constraintName="FK_FUNCIONARIO_ON_USUARIO" referencedColumnNames="id"
+                                 referencedTableName="usuario"/>
+    </changeSet>
+</databaseChangeLog>

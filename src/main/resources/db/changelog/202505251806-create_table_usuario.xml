@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+
+    <changeSet id="1758569351380-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_usuario" startValue="1"/>
+        <createTable tableName="usuario">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_usuario"/>
+            </column>
+            <column name="nome" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cpf" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="senha" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telefone" type="VARCHAR(255)"/>
+            <column name="ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="perfil_id" type="BIGINT"/>
+            <column name="endereco_id" type="BIGINT"/>
+        </createTable>
+        <addUniqueConstraint columnNames="endereco_id" constraintName="uc_usuario_endereco" tableName="usuario"/>
+        <addForeignKeyConstraint baseColumnNames="endereco_id" baseTableName="usuario"
+                                 constraintName="FK_USUARIO_ON_ENDERECO" referencedColumnNames="id"
+                                 referencedTableName="endereco"/>
+        <addForeignKeyConstraint baseColumnNames="perfil_id" baseTableName="usuario"
+                                 constraintName="FK_USUARIO_ON_PERFIL" referencedColumnNames="id"
+                                 referencedTableName="perfil"/>
+    </changeSet>
+</databaseChangeLog>
