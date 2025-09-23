@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="1758659482642-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_titulo_diretor" startValue="1"/>
+        <createTable tableName="titulo_diretor">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_titulo_diretor"/>
+            </column>
+            <column name="titulo_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="diretor_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="diretor_id" baseTableName="titulo_diretor"
+                                 constraintName="FK_TITULO_DIRETOR_ON_DIRETOR" referencedColumnNames="id"
+                                 referencedTableName="diretor"/>
+        <addForeignKeyConstraint baseColumnNames="titulo_id" baseTableName="titulo_diretor"
+                                 constraintName="FK_TITULO_DIRETOR_ON_TITULO" referencedColumnNames="id"
+                                 referencedTableName="titulo"/>
+    </changeSet>
+</databaseChangeLog>

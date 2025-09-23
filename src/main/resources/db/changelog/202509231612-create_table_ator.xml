@@ -5,20 +5,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
-    <changeSet id="20250525-1" author="basis">
-        <createSequence sequenceName="seq_perfil" startValue="1" incrementBy="1"/>
 
-        <createTable tableName="perfil">
+    <changeSet id="1758655532540-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_ator" startValue="1"/>
+        <createTable tableName="ator">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_perfil"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_ator"/>
             </column>
-            <column name="descricao" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ativo" type="BOOLEAN">
+            <column name="nome" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>

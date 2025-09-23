@@ -6,7 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
 
-    <changeSet id="20250525-3" author="layla.couto">
+    <changeSet id="20250525-3" author="basis">
         <insert tableName="perfil" schemaName="">
             <column name="id" valueSequenceNext="seq_perfil"/>
             <column name="descricao" value="Funcionario"/>

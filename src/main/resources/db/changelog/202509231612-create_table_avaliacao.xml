@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="1758658946992-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_avaliacao" startValue="1"/>
+        <createTable tableName="avaliacao">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_avaliacao"/>
+            </column>
+            <column name="estrelas" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comentario" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="avaliacao"
+                                 constraintName="FK_AVALIACAO_ON_ITEM" referencedColumnNames="id"
+                                 referencedTableName="item"/>
+        <addForeignKeyConstraint baseColumnNames="usuario_id" baseTableName="avaliacao"
+                                 constraintName="FK_AVALIACAO_ON_USUARIO" referencedColumnNames="id"
+                                 referencedTableName="usuario"/>
+    </changeSet>
+</databaseChangeLog>

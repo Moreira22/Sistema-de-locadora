@@ -14,4 +14,15 @@
     <include file="db/changelog/202505251806-create_table_usuario.xml"/>
     <include file="db/changelog/202505280823-inset-into-table-usuario.xml"/>
     <include file="db/changelog/202509221631-create_table_fucionario.xml"/>
+    <include file="db/changelog/202509231612-create_table_notificacao.xml"/>
+    <include file="db/changelog/202509231612-create_table_diretor.xml"/>
+    <include file="db/changelog/202509231612-create_table_classe.xml"/>
+    <include file="db/changelog/202509231612-create_table_categoria.xml"/>
+    <include file="db/changelog/202509231612-create_table_ator.xml"/>
+    <include file="db/changelog/202509231612-create_table_titulo.xml"/>
+    <include file="db/changelog/202509231612-create_table_item.xml"/>
+    <include file="db/changelog/202509231612-create_table_avaliacao.xml"/>
+    <include file="db/changelog/202509231612-create_table_locacao.xml"/>
+    <include file="db/changelog/202509231612-create_table_tituloAtor.xml"/>
+    <include file="db/changelog/202509231612-create_table_tituloDiretor.xml"/>
 </databaseChangeLog>
