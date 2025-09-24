@@ -33,6 +33,11 @@ public class UsuarioDTO implements Serializable {
 
     private Boolean ativo = true;
 
+    private String telefone;
+
     @NotNull(message = MensagemUsuarioUtil.NULL_PROFILE)
-    private Integer idPerfil;
+    private Long idPerfil;
+
+    private Long enderecoId;
+
 }
