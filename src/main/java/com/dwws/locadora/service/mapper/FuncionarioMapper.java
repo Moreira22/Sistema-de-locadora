@@ -1,21 +1,20 @@
 package com.dwws.locadora.service.mapper;
 
-
-import com.dwws.locadora.domain.Usuario;
-import com.dwws.locadora.service.dto.UsuarioDTO;
+import com.dwws.locadora.domain.Funcionario;
+import com.dwws.locadora.service.dto.FuncionarioDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface UsuarioMapper extends EntityMapper<UsuarioDTO, Usuario> {
+public interface FuncionarioMapper extends EntityMapper<FuncionarioDTO, Funcionario> {
     @Override
     @Mapping(source = "perfil.id", target = "idPerfil")
     @Mapping(source = "endereco.id", target = "enderecoId")
-    UsuarioDTO toDto(Usuario entity);
+    FuncionarioDTO toDto(Funcionario funcionario);
 
     @Override
     @InheritInverseConfiguration
-    Usuario toEntity(UsuarioDTO dto);
+    Funcionario toEntity(FuncionarioDTO funcionarioDTO);
 
 }
