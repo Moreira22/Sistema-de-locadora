@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class NotifocacaoService {
+public class NotificacaoService {
     private final NotificacaoMapper mapper;
     private final NotifocacaoRepository repository;
 
     public Notificacao findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public NotificacaoDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public NotificacaoDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<NotificacaoDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

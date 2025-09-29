@@ -18,7 +18,7 @@ public class AvaliacaoService {
 
     public Avaliacao findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public AvaliacaoDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public AvaliacaoDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<AvaliacaoDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

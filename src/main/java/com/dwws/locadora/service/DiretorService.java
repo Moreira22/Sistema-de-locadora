@@ -19,7 +19,7 @@ public class DiretorService {
 
     public Diretor findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public DiretorDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public DiretorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<DiretorDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

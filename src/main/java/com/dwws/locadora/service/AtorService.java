@@ -18,7 +18,7 @@ public class AtorService {
 
     public Ator findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public AtorDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public AtorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<AtorDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

@@ -18,7 +18,7 @@ public class CategoriaService {
 
     public Categoria findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public CategoriaDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public CategoriaDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<CategoriaDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

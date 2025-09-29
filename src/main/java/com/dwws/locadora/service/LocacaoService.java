@@ -19,7 +19,7 @@ public class LocacaoService {
 
     public Locacao findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public LocacaoDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public LocacaoDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<LocacaoDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);

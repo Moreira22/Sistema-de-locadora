@@ -19,7 +19,7 @@ public class ItemService {
 
     public Item findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public ItemDTO indByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public ItemDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
     public Page<ItemDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);
