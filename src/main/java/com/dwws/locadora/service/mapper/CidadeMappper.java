@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface CiadadeMappper extends EntityMapper<CidadeDTO, Cidade > {
+public interface CidadeMappper extends EntityMapper<CidadeDTO, Cidade > {
     @Override
     @Mapping(source = "estado.id", target = "estadoId")
     CidadeDTO toDto(Cidade entity);
