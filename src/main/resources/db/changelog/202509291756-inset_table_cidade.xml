@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+    <changeSet id="1758571041523-1" author="basis">
+        <!-- Vitória -->
+        <insert tableName="cidade">
+            <column name="id" valueSequenceNext="seq_cidade"/>
+            <column name="nome" value="Vitória"/>
+            <column name="estado_id" value="8"/> <!-- id do ES -->
+        </insert>
+
+        <!-- Vila Velha -->
+        <insert tableName="cidade">
+            <column name="id" valueSequenceNext="seq_cidade"/>
+            <column name="nome" value="Vila Velha"/>
+            <column name="estado_id" value="8"/>
+        </insert>
+
+        <!-- Serra -->
+        <insert tableName="cidade">
+            <column name="id" valueSequenceNext="seq_cidade"/>
+            <column name="nome" value="Serra"/>
+            <column name="estado_id" value="8"/>
+        </insert>
+
+        <!-- Cariacica -->
+        <insert tableName="cidade">
+            <column name="id" valueSequenceNext="seq_cidade"/>
+            <column name="nome" value="Cariacica"/>
+            <column name="estado_id" value="8"/>
+        </insert>
+
+        <!-- Colatina -->
+        <insert tableName="cidade">
+            <column name="id" valueSequenceNext="seq_cidade"/>
+            <column name="nome" value="Colatina"/>
+            <column name="estado_id" value="8"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

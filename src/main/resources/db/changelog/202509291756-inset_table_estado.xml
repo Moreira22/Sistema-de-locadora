@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+    <changeSet id="1758569130619-2" author="basis">
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="AC"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="AL"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="AP"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="AM"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="BA"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="CE"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="DF"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="ES"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="GO"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="MA"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="MT"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="MS"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="MG"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="PA"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="PB"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="PR"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="PE"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="PI"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="RJ"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="RN"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="RS"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="RO"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="RR"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="SC"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="SP"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="SE"/>
+        </insert>
+        <insert tableName="estado">
+            <column name="id" valueSequenceNext="seq_estado"/>
+            <column name="nome" value="TO"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
