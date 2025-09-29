@@ -1,6 +1,7 @@
 package com.dwws.locadora.repository;
 
 import com.dwws.locadora.domain.Classe;
+import com.dwws.locadora.service.dto.ClasseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,10 @@ import java.util.Optional;
 
 @Repository
 public interface ClasseRepository extends JpaRepository<Classe, Long>{
+    @Query("SELECT NEW com.dwws.locadora.service.dto.ClasseDTO(c.id, c.nome, c.valor, c.prazoDevolucao)"+
+            "FROM Classe c")
+    Page<ClasseDTO> listAll(Pageable pageable);
+
+    Optional<Classe> findByNome(String nome);
+
 }

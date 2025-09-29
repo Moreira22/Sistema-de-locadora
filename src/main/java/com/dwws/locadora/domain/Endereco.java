@@ -45,5 +45,9 @@ public class Endereco implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cidade_id", nullable = false)
     private Cidade cidade;
+
+    public Endereco(Long id) {
+        this.id = id;
+    }
 }
 

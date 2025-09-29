@@ -32,4 +32,15 @@ public class Funcionario extends Usuario{
     @Column(name = "data_demissao")
     private LocalDate dataDemissao;
 
+    // Construtor completo incluindo campos da superclasse
+    public Funcionario(Long id, String nome, String cpf, String email, String login, String senha,
+                       String telefone, Boolean ativo, Perfil perfil, Endereco endereco,
+                       String cargo, Double salario, LocalDate dataAdmissao, LocalDate dataDemissao) {
+        super(id, nome, cpf, email, login, senha, telefone, ativo, perfil, endereco);
+        this.cargo = cargo;
+        this.salario = salario;
+        this.dataAdmissao = dataAdmissao;
+        this.dataDemissao = dataDemissao;
+    }
+
 }
