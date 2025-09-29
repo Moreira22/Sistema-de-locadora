@@ -42,9 +42,12 @@ public class Endereco implements Serializable{
     @Column(name = "cep", nullable = false)
     private String cep;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cidade_id", nullable = false)
-    private Cidade cidade;
+    @Column(name = "cidade", nullable = false)
+    private String cidade;
+
+    @Column(name = "UF", nullable = false)
+    private String UF;
+
 
     public Endereco(Long id) {
         this.id = id;

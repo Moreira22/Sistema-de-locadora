@@ -20,5 +20,6 @@ public class EnderecoDTO implements Serializable{
     private String numero;
     private String bairro;
     private String cep;
-    private Long cidadeId;
+    private String cidade;
+    private String UF;
 }

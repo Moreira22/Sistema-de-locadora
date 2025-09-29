@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco,Long> {
-    List<Endereco> findAllByCidade_Id(Long cidadeId);
+
 }

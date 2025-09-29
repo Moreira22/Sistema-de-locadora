@@ -24,12 +24,12 @@
             <column name="cep" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cidade_id" type="BIGINT">
+            <column name="cidade" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uf" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="cidade_id" baseTableName="endereco"
-                                 constraintName="FK_ENDERECO_ON_CIDADE" referencedColumnNames="id"
-                                 referencedTableName="cidade"/>
     </changeSet>
 </databaseChangeLog>
