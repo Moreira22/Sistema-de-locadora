@@ -34,7 +34,7 @@ export function AdminSidebar() {
     return (
         <aside className="w-64 border-r bg-card min-h-screen p-6">
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-primary">CineAdmin</h2>
+                <h2 className="text-2xl font-bold text-primary">LocaCine</h2>
                 <p className="text-sm text-muted-foreground">Painel Administrativo</p>
             </div>
 
