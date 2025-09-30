@@ -17,7 +17,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
     @Query("SELECT NEW com.dwws.locadora.service.dto.ItemDTO(i.id, " +
             "i.numeroSerie, i.dataAquisicao, i.titulo.id, i.status)"+
             "FROM Item i")
-    Page<ItemDTO> listAll(Pageable pageable);
+    List<ItemDTO> listAll();
 
     List<Item> findAllByTitulo_Id(Long tituloId);
 }

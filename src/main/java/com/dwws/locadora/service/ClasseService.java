@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -20,8 +22,8 @@ public class ClasseService {
 
     public ClasseDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<ClasseDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<ClasseDTO> findAll() {
+        return repository.listAll();
     }
 
     public ClasseDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }

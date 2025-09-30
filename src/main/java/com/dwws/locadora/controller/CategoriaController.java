@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/categoria")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,8 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoriaController {
     private final CategoriaService service;
     @GetMapping
-    public ResponseEntity<Page<CategoriaDTO>> findAll(Pageable pageable) {
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<List<CategoriaDTO>> findAll() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idCategoria}")

@@ -34,12 +34,11 @@ public class Titulo implements Serializable {
     @Column(name = "ano", nullable = false)
     private Integer ano;
 
-    @Lob
-    @Column(name = "sinopse", nullable = false)
+    @Column(name = "sinopse", nullable = false, columnDefinition = "TEXT")
     private String sinopse;
 
     @Lob
-    @Column(name = "imagem", nullable = false)
+    @Column(name = "imagem")
     private byte[] imagem;
 
     @ManyToOne

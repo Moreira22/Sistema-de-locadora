@@ -4,10 +4,10 @@ import com.dwws.locadora.repository.CategoriaRepository;
 import com.dwws.locadora.service.dto.CategoriaDTO;
 import com.dwws.locadora.service.mapper.CategoriaMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +20,8 @@ public class CategoriaService {
 
     public CategoriaDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<CategoriaDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<CategoriaDTO> findAll() {
+        return repository.listAll();
     }
 
     public CategoriaDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
