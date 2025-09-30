@@ -17,7 +17,7 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>{
             "u.perfil.id as perfilId, u.perfil.descricao as perfilDescricao, " +
             "u.ativo as ativo, u.cargo as cargo, u.salario as salario, " +
             "u.dataAdmissao as dataAdmissao, u.dataDemissao as dataDemissao " +
-            "FROM Funcionario u WHERE u.ativo = true")
+            "FROM Funcionario u WHERE u.ativo = true AND u.perfil.id = 1")
     Page<FuncionarioProjection> listAll(Pageable pageable);
 
     Optional<Funcionario> findByLogin(String login);
