@@ -6,7 +6,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'LocaCine',
-  description: 'Created with v0',
+  description: '',
   generator: 'LocaCine',
 }
 
