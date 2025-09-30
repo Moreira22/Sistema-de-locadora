@@ -1,6 +1,8 @@
 package com.dwws.locadora.controller;
 
 import com.dwws.locadora.service.UsuarioService;
+import com.dwws.locadora.service.dto.FuncionarioDTO;
+import com.dwws.locadora.service.dto.FuncionarioProjection;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
 import com.dwws.locadora.service.dto.UsuarioDTO;
 import com.dwws.locadora.service.dto.UsuarioListDTO;
@@ -57,4 +59,20 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> findByLogin(@PathVariable("login") String login) {
         return new ResponseEntity<>(service.findByLogin(login), HttpStatus.OK);
     }
+
+    @GetMapping("/funcionario")
+    public ResponseEntity<Page<FuncionarioProjection>> findAllFincionario(Pageable pageable) {
+        return new ResponseEntity<>(service.findAllFuncionario(pageable), HttpStatus.OK);
+    }
+
+    @PostMapping("/funcionario")
+    public ResponseEntity<FuncionarioDTO> saveFuncionario(@RequestBody FuncionarioDTO dto) {
+        return new ResponseEntity<>(service.saveFuncionario(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/funcionario/{idUsuario}")
+    public ResponseEntity<FuncionarioDTO> findByIDFuncionario(@PathVariable("idUsuario") Long idUsuario) {
+        return new ResponseEntity<>(service.findFuncionarioByID(idUsuario), HttpStatus.OK);
+    }
+
 }
