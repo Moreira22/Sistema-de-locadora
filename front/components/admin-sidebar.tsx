@@ -26,6 +26,16 @@ const menuItems = [
         href: "/admin/filmes",
         icon: Film,
     },
+    {
+        title: "Locações",
+        href: "/admin/locacao",
+        icon: Film,
+    },
+    {
+        title: "Notificação",
+        href: "/admin/locacao",
+        icon: Film,
+    },
 ]
 
 export function AdminSidebar() {
