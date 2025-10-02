@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface TituloMapper extends EntityMapper<TituloDTO, Titulo> {
     @Override
     @Mapping(source = "categoria.id", target = "categoriaId")
-    @Mapping(source = "classe.id", target = "claseId")
+    @Mapping(source = "classe.id", target = "classeId")
     TituloDTO toDto(Titulo titulo);
 
     @Override

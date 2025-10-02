@@ -4,6 +4,7 @@ import com.dwws.locadora.service.DiretorService;
 import com.dwws.locadora.service.ItemService;
 import com.dwws.locadora.service.dto.DiretorDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
+import com.dwws.locadora.service.dto.ItemListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ import java.util.List;
 public class ItemController {
     private final ItemService service;
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> findAll() {
+    public ResponseEntity<List<ItemListDTO>> findAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 

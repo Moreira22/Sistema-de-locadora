@@ -3,10 +3,9 @@ package com.dwws.locadora.service;
 import com.dwws.locadora.domain.Item;
 import com.dwws.locadora.repository.ItemRepository;
 import com.dwws.locadora.service.dto.ItemDTO;
+import com.dwws.locadora.service.dto.ItemListDTO;
 import com.dwws.locadora.service.mapper.ItemMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,8 @@ public class ItemService {
 
     public ItemDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public List<ItemDTO> findAll() {
-        return repository.listAll();
+    public List<ItemListDTO> findAll() {
+        return repository.findAllItens();
     }
 
     public ItemDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }

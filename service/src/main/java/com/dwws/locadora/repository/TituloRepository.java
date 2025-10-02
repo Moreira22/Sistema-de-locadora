@@ -14,10 +14,15 @@ import java.util.Optional;
 
 @Repository
 public interface TituloRepository  extends JpaRepository<Titulo, Long>{
-    @Query("SELECT NEW com.dwws.locadora.service.dto.TituloDTO(t.id, t.ano, " +
-            "t.sinopse, t.imagem, t.classe.id, t.categoria.id)"+
-            "FROM Titulo t")
-    Page<TituloDTO> listAll(Pageable pageable);
+    @Query("""
+    SELECT NEW com.dwws.locadora.service.dto.TituloDTO(
+        t.id,t.ano, t.sinopse, t.imagem, t.classe.id, t.categoria.id, t.classe.nome,
+        t.categoria.nome
+    )
+    FROM Titulo t
+    """)
+    List<TituloDTO> listAll();
+
 
     List<Titulo> findAllByCategoria_Id(Long categoriaId);
 
