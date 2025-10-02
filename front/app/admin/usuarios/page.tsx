@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
+import {useUsuario} from "@/hooks/usuario";
+import {Usuario} from "@/model/usuario";
 
 interface User {
     id: number
@@ -18,35 +20,19 @@ interface User {
 }
 
 export default function UsuariosPage() {
-    const [searchTerm, setSearchTerm] = useState("")
+    const [searchTerm, setSearchTerm] = useState("");
+    const { getUsuarios } = useUsuario();
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-    // Dados de exemplo
-    const [usuarios] = useState<User[]>([
-        {
-            id: 1,
-            nome: "João Silva",
-            email: "joao@email.com",
-            telefone: "(11) 98765-4321",
-            status: "ativo",
-            dataCadastro: "15/01/2024",
-        },
-        {
-            id: 2,
-            nome: "Maria Santos",
-            email: "maria@email.com",
-            telefone: "(11) 97654-3210",
-            status: "ativo",
-            dataCadastro: "20/01/2024",
-        },
-        {
-            id: 3,
-            nome: "Pedro Oliveira",
-            email: "pedro@email.com",
-            telefone: "(11) 96543-2109",
-            status: "inativo",
-            dataCadastro: "10/01/2024",
-        },
-    ])
+    useEffect(() => {
+        const fetchUsuarios = async () => {
+            const data = await getUsuarios();
+            if (data) {
+                setUsuarios(data);
+            }
+        };
+        fetchUsuarios();
+    }, []);
 
     const filteredUsers = usuarios.filter(
         (user) =>
@@ -86,10 +72,9 @@ export default function UsuariosPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Nome</TableHead>
-                            <TableHead>Email</TableHead>
                             <TableHead>Telefone</TableHead>
+                            <TableHead>Email</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Data Cadastro</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -97,12 +82,12 @@ export default function UsuariosPage() {
                         {filteredUsers.map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell className="font-medium">{user.nome}</TableCell>
-                                <TableCell>{user.email}</TableCell>
+                                <TableCell>{user.nome}</TableCell>
                                 <TableCell>{user.telefone}</TableCell>
+                                <TableCell>{user.email}</TableCell>
                                 <TableCell>
-                                    <Badge variant={user.status === "ativo" ? "default" : "secondary"}>{user.status}</Badge>
+                                    <Badge variant={user.ativo === true ? "default" : "secondary"}>{user.ativo}</Badge>
                                 </TableCell>
-                                <TableCell>{user.dataCadastro}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button variant="ghost" size="icon">
