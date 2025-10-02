@@ -19,4 +19,5 @@ public class UsuarioListDTO implements Serializable {
     private Long idPerfil;
     private String descPerfil;
     private Boolean ativo;
+    private EnderecoDTO endereco;
 }
