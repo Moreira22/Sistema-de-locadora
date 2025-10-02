@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const url = process.env.BASE_URL + "/Api";
-
+// URL do backend, incluindo a porta correta
 const Api = axios.create({
-    baseURL: url,
+    baseURL: 'http://localhost:8080/api', // <-- note o "http://localhost:8080"
+    withCredentials: true, // se você estiver usando cookies ou sessão
 });
 
 export default Api;

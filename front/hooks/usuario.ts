@@ -4,11 +4,11 @@ import Api from "@/server/server";
 export const useUsuario = () => {
 
     const getUsuarios = async (): Promise<Usuario[] | null> => {
-        try{
-            const respose = await Api.get('/usuarios');
-            return respose.data;
-        }catch (error){
-            console.error('GET', error);
+        try {
+            const response = await Api.get('/usuarios');
+            return response.data;
+        } catch (error) {
+            console.error('GET /usuarios', error);
             return null;
         }
     };
