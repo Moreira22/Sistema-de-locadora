@@ -9,8 +9,10 @@ import { Search, Plus, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
 import {useUsuario} from "@/hooks/usuario";
 import {Usuario} from "@/model/usuario";
+import {useRouter} from "next/navigation";
 
 export default function UsuariosPage() {
+    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
     const { getUsuarios, getUsuarioByNome } = useUsuario();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -82,7 +84,9 @@ export default function UsuariosPage() {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <Button variant="ghost" size="icon">
+                                        <Button variant="ghost" size="icon"
+                                                onClick={() => router.push(`/admin/usuarios/${user.id}`)}
+                                        >
                                             <Pencil className="h-4 w-4" />
                                         </Button>
                                         <Button variant="ghost" size="icon">

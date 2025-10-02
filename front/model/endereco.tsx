@@ -4,6 +4,6 @@ export interface Endereco{
     bairro: string;
     rua: string;
     numero: number;
-    UF: string;
+    uf: string;
     cidade: string;
 }
