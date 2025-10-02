@@ -86,5 +86,11 @@ public class UsuarioService {
         return funcionarioRepository.listAll(pageable);
     }
 
+    public UsuarioDTO findByNome(String nome) {
+        return repository.findByNome(nome)
+                .map(mapper::toDto)
+                .orElseThrow( () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
+    }
+
 
 }

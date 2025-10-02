@@ -3,13 +3,13 @@ import {Funcionario} from "@/model/funcionario";
 import Api from "@/server/server";
 export const useUsuario = () => {
 
-    const getUsuarios = async (): Promise<Usuario[] | null> => {
+    const getUsuarios = async (): Promise<Usuario[]> => {
         try {
             const response = await Api.get('/usuarios');
-            return response.data;
+            return response.data; // Isso deve ser um array
         } catch (error) {
-            console.error('GET /usuarios', error);
-            return null;
+            console.error(error);
+            return []; // Retorna um array vazio em caso de erro
         }
     };
     const getFuncionarios = async (): Promise<Funcionario[] | null> => {
@@ -24,6 +24,15 @@ export const useUsuario = () => {
     const getUsuarioById = async (userId: number): Promise<Usuario | Funcionario| null> => {
         try {
             const response = await Api.get(`/usuario/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error('GET BY ID', error);
+            return null;
+        }
+    };
+    const getUsuarioByNome = async (nome: string): Promise<Usuario | Funcionario| null> => {
+        try {
+            const response = await Api.get(`/usuario/${nome}`);
             return response.data;
         } catch (error) {
             console.error('GET BY ID', error);
@@ -58,5 +67,5 @@ export const useUsuario = () => {
         }
     };
 
-    return{ getUsuarioById, getFuncionarios, postUsuario, getUsuarios, putUsuario, postLogin };
+    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin };
 };

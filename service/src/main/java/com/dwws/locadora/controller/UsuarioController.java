@@ -60,6 +60,11 @@ public class UsuarioController {
         return new ResponseEntity<>(service.findByLogin(login), HttpStatus.OK);
     }
 
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<UsuarioDTO> findByNome(@PathVariable("nome") String nome) {
+        return new ResponseEntity<>(service.findByNome(nome), HttpStatus.OK);
+    }
+
     @GetMapping("/funcionario")
     public ResponseEntity<Page<FuncionarioProjection>> findAllFincionario(Pageable pageable) {
         return new ResponseEntity<>(service.findAllFuncionario(pageable), HttpStatus.OK);

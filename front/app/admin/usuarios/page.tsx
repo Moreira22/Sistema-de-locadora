@@ -10,34 +10,25 @@ import Link from "next/link"
 import {useUsuario} from "@/hooks/usuario";
 import {Usuario} from "@/model/usuario";
 
-interface User {
-    id: number
-    nome: string
-    email: string
-    telefone: string
-    status: "ativo" | "inativo"
-    dataCadastro: string
-}
-
 export default function UsuariosPage() {
     const [searchTerm, setSearchTerm] = useState("");
-    const { getUsuarios } = useUsuario();
+    const { getUsuarios, getUsuarioByNome } = useUsuario();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
     useEffect(() => {
         const fetchUsuarios = async () => {
-            const data = await getUsuarios();
-            if (data) {
-                setUsuarios(data);
+            const data = await getUsuarios()
+            console.log("Usuarios API:", data) // verifique estrutura
+            if (data && Array.isArray(data.content)) {
+                setUsuarios(data.content)
             }
-        };
-        fetchUsuarios();
+        }
+        fetchUsuarios()
     }, []);
 
-    const filteredUsers = usuarios.filter(
-        (user) =>
-            user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    const filteredUsers = usuarios.filter(user =>
+        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     return (
@@ -79,14 +70,15 @@ export default function UsuariosPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredUsers.map((user) => (
+                        {Array.isArray(filteredUsers) && filteredUsers.map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell className="font-medium">{user.nome}</TableCell>
-                                <TableCell>{user.nome}</TableCell>
                                 <TableCell>{user.telefone}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>
-                                    <Badge variant={user.ativo === true ? "default" : "secondary"}>{user.ativo}</Badge>
+                                    <Badge variant={user.ativo ? "default" : "secondary"}>
+                                        {user.ativo ? "Ativo" : "Inativo"}
+                                    </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
@@ -100,9 +92,16 @@ export default function UsuariosPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
+                        {filteredUsers.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                                    Nenhum usuário encontrado
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
             </div>
         </div>
-    )
+    );
 }
