@@ -1,5 +1,6 @@
 package com.dwws.locadora.domain;
 
+import com.dwws.locadora.service.dto.EnderecoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -48,9 +49,7 @@ public class Endereco implements Serializable{
     @Column(name = "UF", nullable = false)
     private String UF;
 
-
-    public Endereco(Long id) {
-        this.id = id;
+    public Endereco(EnderecoDTO endereco) {
     }
 }
 

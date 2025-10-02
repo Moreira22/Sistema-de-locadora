@@ -1,6 +1,9 @@
 package com.dwws.locadora.controller;
 
+import com.dwws.locadora.repository.PerfilRepository;
+import com.dwws.locadora.service.PerfilService;
 import com.dwws.locadora.service.UsuarioService;
+import com.dwws.locadora.service.dto.DropdownDTO;
 import com.dwws.locadora.service.dto.FuncionarioDTO;
 import com.dwws.locadora.service.dto.FuncionarioProjection;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
@@ -21,16 +24,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/usuarios")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService service;
+    private final PerfilService  perfilService;
 
     @GetMapping
     public ResponseEntity<Page<UsuarioListDTO>> findAll(Pageable pageable) {
         return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    }
+    @GetMapping("/perfil")
+    public ResponseEntity<List<DropdownDTO>> fillProfileDropdown() {
+        return new ResponseEntity<>(perfilService.fillProfileDropdown(), HttpStatus.OK);
     }
 
     @GetMapping("/{idUsuario}")
