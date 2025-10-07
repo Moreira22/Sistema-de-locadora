@@ -4,6 +4,7 @@ import com.dwws.locadora.service.ItemService;
 import com.dwws.locadora.service.LocacaoService;
 import com.dwws.locadora.service.NotificacaoService;
 import com.dwws.locadora.service.TituloService;
+import com.dwws.locadora.service.dto.CreateTituloDTO;
 import com.dwws.locadora.service.dto.DiretorDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
 import com.dwws.locadora.service.dto.LocacaoDTO;
@@ -43,7 +44,7 @@ public class TituloController {
     }
 
     @PostMapping
-    public ResponseEntity<TituloDTO> save(@RequestBody TituloDTO dto) {
-        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<CreateTituloDTO> save(@RequestBody CreateTituloDTO dto) {
+        return new ResponseEntity<>(service.saveTituloItem(dto), HttpStatus.CREATED);
     }
 }

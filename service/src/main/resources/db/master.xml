@@ -22,4 +22,5 @@
     <include file="db/changelog/202509231612-create_table_locacao.xml"/>
     <include file="db/changelog/202509231612-create_table_tituloAtor.xml"/>
     <include file="db/changelog/202509231612-create_table_tituloDiretor.xml"/>
+    <include file="db/changelog/202510071344-update_table_titulo.xml"/>
 </databaseChangeLog>
