@@ -1,6 +1,6 @@
 import Api from "@/server/server";
 import {Item} from "@/model/item";
-import {Titulo} from "@/model/titulo";
+import {Titulo, CreateItem} from '@/model/titulo';
 export const useItem = () =>{
     const getItems = async (): Promise<Item[] | null> => {
         try{
@@ -11,9 +11,9 @@ export const useItem = () =>{
             return null;
         }
     };
-    const postItem = async (item: Item): Promise<Item | null> => {
+    const postItem = async (item: CreateItem): Promise<CreateItem | null> => {
         try{
-            const respose = await Api.post('/item/register', item);
+            const respose = await Api.post('/titulo', item);
             return respose.data;
         }catch (error){
             console.error('GET', error);
