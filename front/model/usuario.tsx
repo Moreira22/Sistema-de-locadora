@@ -8,8 +8,8 @@ export interface Usuario{
     email:string;
     telefone: string;
     nome: string;
-    idPerfil: number;
-    descPerfil: string;
+    perfilId: number;
+    perfilDesc: string;
     ativo: boolean;
     endereco: Endereco;
 }

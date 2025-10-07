@@ -12,8 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Upload } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-
-export default function NovoFilmePage() {
+interface FilmesFormPageProps {
+    isEdit?: boolean
+    temId?: number
+}
+export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageProps) {
     const router = useRouter()
     const [formData, setFormData] = useState({
         titulo: "",
