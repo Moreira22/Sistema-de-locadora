@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface TituloRepository  extends JpaRepository<Titulo, Long>{
     @Query("""
     SELECT NEW com.dwws.locadora.service.dto.TituloDTO(
-        t.id,t.ano, t.sinopse, t.imagem, t.classe.id, t.categoria.id, t.classe.nome,
+        t.id,t.ano, t.sinopse,t.nome, t.imagem, t.classe.id, t.categoria.id, t.classe.nome,
         t.categoria.nome
     )
     FROM Titulo t

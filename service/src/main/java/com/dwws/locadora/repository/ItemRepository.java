@@ -24,6 +24,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
             t.id,
             t.ano,
             t.sinopse,
+            t.nome,
             t.imagem,
             c.id,
             cat.id,
