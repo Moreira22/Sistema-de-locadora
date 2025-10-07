@@ -1,7 +1,5 @@
 package com.dwws.locadora.service.dto;
 import com.dwws.locadora.domain.enums.StatusItem;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +16,6 @@ public class ItemListDTO implements Serializable{
     private Long id;
     private String numeroSerie;
     private LocalDate dataAquisicao;
-    private TituloDTO titulo;
+    private TituloListDTO titulo;
     private StatusItem status;
 }

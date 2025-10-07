@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TituloDTO implements Serializable{
+public class TituloListDTO implements Serializable{
     private Long id;
     private Integer ano;
     private String sinopse;
@@ -18,4 +18,7 @@ public class TituloDTO implements Serializable{
     private byte[] imagem;
     private Long classeId;
     private Long categoriaId;
+    private String classeNome;
+    private String categoriaNome;
+
 }

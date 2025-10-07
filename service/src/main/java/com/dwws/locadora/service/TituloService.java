@@ -4,11 +4,9 @@ import com.dwws.locadora.domain.Titulo;
 import com.dwws.locadora.repository.TituloRepository;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
-import com.dwws.locadora.service.dto.TituloDTO;
+import com.dwws.locadora.service.dto.TituloListDTO;
 import com.dwws.locadora.service.mapper.TituloMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,21 +23,21 @@ public class TituloService {
 
     public Titulo findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public TituloDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public TituloListDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public List<TituloDTO> findAll() {
+    public List<TituloListDTO> findAll() {
         return repository.listAll();
     }
 
-    public TituloDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public TituloListDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public TituloDTO save(TituloDTO dto){
+    public TituloListDTO save(TituloListDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Transactional
     public CreateTituloDTO saveTituloItem(CreateTituloDTO dto) {
-        TituloDTO tituloDTO = save(dto.getTitulo());
+        TituloListDTO tituloDTO = save(dto.getTitulo());
 
         List<ItemDTO> savedItems = new ArrayList<>();
 

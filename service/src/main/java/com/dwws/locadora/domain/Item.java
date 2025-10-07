@@ -34,7 +34,7 @@ public class Item implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "numero_serie", nullable = false, unique = true)
+    @Column(name = "numero_serie", nullable = false)
     private String numeroSerie;
 
     @Column(name = "data_aquisixao", nullable = false)

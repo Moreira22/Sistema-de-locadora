@@ -20,7 +20,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
         i.id,
         i.numeroSerie,
         i.dataAquisicao,
-        new com.dwws.locadora.service.dto.TituloDTO(
+        new com.dwws.locadora.service.dto.TituloListDTO(
             t.id,
             t.ano,
             t.sinopse,
