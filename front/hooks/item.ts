@@ -20,9 +20,9 @@ export const useItem = () =>{
             return null;
         }
     };
-    const getItemById = async (id: number): Promise<Item | null> => {
+    const getItemById = async (idItem?: number): Promise<Item | null> => {
         try{
-            const respose = await Api.get(`/item/${id}`);
+            const respose = await Api.get(`/item/${idItem}`);
             return respose.data;
         }catch (error){
             console.error('GET', error);

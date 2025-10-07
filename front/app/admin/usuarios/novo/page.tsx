@@ -98,7 +98,7 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         uf: data.endereco?.uf ?? "",
                         cep: data.endereco?.cep ?? "",
                     },
-                    idPerfil: data.idPerfil ?? 0,
+                    idPerfil: data.perfilId ?? 0,
                 })
             }
         }

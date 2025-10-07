@@ -1,6 +1,6 @@
 import {Classe} from "@/model/classe";
 import {Categoria} from "@/model/categoria";
-import {Item} from "@/model/item";
+import {ItemCreate} from "@/model/item";
 export interface Titulo {
     id: number;
     ano: number;
@@ -9,7 +9,15 @@ export interface Titulo {
     classe: Classe;
     categoria: Categoria;
 }
+export interface TituloCreate{
+    id: number;
+    ano: number;
+    sinopse: string;
+    imagem: string;
+    classeId: number;
+    categoriaId: number;
+}
 export interface CreateItem{
-    titulo: Titulo;
-    itemList: Item[];
+    titulo: TituloCreate;
+    itemList: ItemCreate[];
 }

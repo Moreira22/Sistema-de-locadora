@@ -1,49 +1,119 @@
 "use client"
 
-import type React from "react"
+import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { useForm, Controller, useFieldArray } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Upload } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+
+import { useCategoria } from "@/hooks/categoria"
+import { useClasse } from "@/hooks/classe"
+import { Categoria } from "@/model/categoria"
+import { Classe } from "@/model/classe"
+
 interface FilmesFormPageProps {
     isEdit?: boolean
     temId?: number
 }
+
+export interface TituloCreate {
+    id: number
+    ano: number
+    sinopse: string
+    nome: string
+    imagem: string
+    classeId: number
+    categoriaId: number
+}
+
+export interface ItemCreate {
+    id: number
+    numeroSerie: string
+    dataAquisicao: string
+    status: string
+}
+
+export interface CreateItem {
+    titulo: TituloCreate
+    itemList: ItemCreate[]
+}
+
+const schema = z.object({
+    titulo: z.object({
+        nome: z.string().min(1, "Nome é obrigatório"),
+        ano: z.number().min(1900, "Ano inválido"),
+        sinopse: z.string().min(1, "Sinopse é obrigatória"),
+        classeId: z.number(),
+        categoriaId: z.number(),
+        imagem: z.string().optional(),
+    }),
+    itemList: z.array(
+        z.object({
+            numeroSerie: z.string().min(1, "Número de série é obrigatório"),
+            dataAquisicao: z.string(),
+            status: z.enum(["DISPONIVEL", "LOCADO", "RESERVADO", "DANIFICADO", "PERDIDO"]),
+        })
+    ),
+})
+
+type FilmesFormData = z.infer<typeof schema>
+
 export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageProps) {
     const router = useRouter()
-    const [formData, setFormData] = useState({
-        titulo: "",
-        ano: "",
-        genero: "",
-        diretor: "",
-        duracao: "",
-        sinopse: "",
-        classificacao: "",
-        precoLocacao: "",
-        disponivel: "true",
-        poster: "",
+    const [categorias, setCategorias] = useState<Categoria[]>([])
+    const [classe, setClasse] = useState<Classe[]>([])
+    const { getCategorias } = useCategoria()
+    const { getClasses } = useClasse()
+
+    const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FilmesFormData>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            titulo: {
+                nome: "",
+                ano: new Date().getFullYear(),
+                sinopse: "",
+                classeId: 0,
+                categoriaId: 0,
+                imagem: ""
+            },
+            itemList: [
+                { numeroSerie: "", dataAquisicao: new Date().toISOString().slice(0, 10), status: "DISPONIVEL" }
+            ]
+        }
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log("[v0] Cadastrando filme:", formData)
-        // Aqui você adicionaria a lógica para salvar no banco de dados
-        router.push("/admin/filmes")
-    }
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "itemList"
+    })
 
-    const handleChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }))
+    useEffect(() => {
+        const fetchDados = async () => {
+            const cat = await getCategorias()
+            const cls = await getClasses()
+            setCategorias(cat)
+            setClasse(cls)
+        }
+        fetchDados()
+    }, [])
+
+    const onSubmit = async (data: FilmesFormData) => {
+        console.log("Dados enviados:", data)
+        // Aqui você chamaria sua API para salvar o título e itens
+        // router.push("/admin/filmes")
     }
 
     return (
-        <div className="space-y-6 max-w-3xl">
+        <div className="space-y-6 max-w-4xl mx-auto">
             <div className="flex items-center gap-4">
                 <Link href="/admin/filmes">
                     <Button variant="ghost" size="icon">
@@ -51,163 +121,196 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                     </Button>
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Novo Filme</h1>
-                    <p className="text-muted-foreground mt-1">Adicione um novo filme ao catálogo</p>
+                    <h1 className="text-3xl font-bold text-foreground">
+                        {isEdit ? "Editar Filme" : "Novo Filme"}
+                    </h1>
+                    <p className="text-muted-foreground mt-1">
+                        {isEdit ? "Edite os dados do filme" : "Cadastre um novo filme no sistema"}
+                    </p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Card>
                     <CardHeader>
                         <CardTitle>Informações do Filme</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
+                        {/* Nome, Ano, Sinopse */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="titulo">Título *</Label>
-                                <Input
-                                    id="titulo"
-                                    value={formData.titulo}
-                                    onChange={(e) => handleChange("titulo", e.target.value)}
-                                    required
+                                <Label htmlFor="nome">Nome *</Label>
+                                <Controller
+                                    name="titulo.nome"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input {...field} placeholder="Nome do filme" />
+                                    )}
                                 />
+                                {errors.titulo?.nome && <p className="text-red-500 text-sm">{errors.titulo.nome.message}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="ano">Ano *</Label>
-                                <Input
-                                    id="ano"
-                                    type="number"
-                                    value={formData.ano}
-                                    onChange={(e) => handleChange("ano", e.target.value)}
-                                    placeholder="2024"
-                                    required
+                                <Controller
+                                    name="titulo.ano"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="number"
+                                            onChange={(e) => field.onChange(Number(e.target.value))} // <-- converte para number
+                                        />
+                                    )}
                                 />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="genero">Gênero *</Label>
-                                <Select value={formData.genero} onValueChange={(value) => handleChange("genero", value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecione o gênero" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="acao">Ação</SelectItem>
-                                        <SelectItem value="aventura">Aventura</SelectItem>
-                                        <SelectItem value="comedia">Comédia</SelectItem>
-                                        <SelectItem value="drama">Drama</SelectItem>
-                                        <SelectItem value="ficcao">Ficção Científica</SelectItem>
-                                        <SelectItem value="terror">Terror</SelectItem>
-                                        <SelectItem value="romance">Romance</SelectItem>
-                                        <SelectItem value="suspense">Suspense</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="diretor">Diretor *</Label>
-                                <Input
-                                    id="diretor"
-                                    value={formData.diretor}
-                                    onChange={(e) => handleChange("diretor", e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="duracao">Duração (minutos) *</Label>
-                                <Input
-                                    id="duracao"
-                                    type="number"
-                                    value={formData.duracao}
-                                    onChange={(e) => handleChange("duracao", e.target.value)}
-                                    placeholder="120"
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="classificacao">Classificação *</Label>
-                                <Select value={formData.classificacao} onValueChange={(value) => handleChange("classificacao", value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecione" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="livre">Livre</SelectItem>
-                                        <SelectItem value="10">10 anos</SelectItem>
-                                        <SelectItem value="12">12 anos</SelectItem>
-                                        <SelectItem value="14">14 anos</SelectItem>
-                                        <SelectItem value="16">16 anos</SelectItem>
-                                        <SelectItem value="18">18 anos</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                {errors.titulo?.ano && <p className="text-red-500 text-sm">{errors.titulo.ano.message}</p>}
                             </div>
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="sinopse">Sinopse *</Label>
-                            <Textarea
-                                id="sinopse"
-                                value={formData.sinopse}
-                                onChange={(e) => handleChange("sinopse", e.target.value)}
-                                rows={4}
-                                required
+                            <Controller
+                                name="titulo.sinopse"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea {...field} rows={4} placeholder="Sinopse do filme" />
+                                )}
                             />
+                            {errors.titulo?.sinopse && <p className="text-red-500 text-sm">{errors.titulo.sinopse.message}</p>}
                         </div>
 
+                        {/* Classe e Categoria */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="precoLocacao">Preço de Locação (R$) *</Label>
-                                <Input
-                                    id="precoLocacao"
-                                    type="number"
-                                    step="0.01"
-                                    value={formData.precoLocacao}
-                                    onChange={(e) => handleChange("precoLocacao", e.target.value)}
-                                    placeholder="12.90"
-                                    required
+                                <Label>Classe *</Label>
+                                <Controller
+                                    name="titulo.classeId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select value={field.value?.toString()} onValueChange={(val) => field.onChange(Number(val))}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione a classe" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {classe.map(c => (
+                                                    <SelectItem key={c.id} value={c.id.toString()}>{c.nome}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="disponivel">Disponibilidade</Label>
-                                <Select value={formData.disponivel} onValueChange={(value) => handleChange("disponivel", value)}>
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="true">Disponível</SelectItem>
-                                        <SelectItem value="false">Indisponível</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="poster">Poster do Filme</Label>
-                            <div className="flex gap-2">
-                                <Input
-                                    id="poster"
-                                    value={formData.poster}
-                                    onChange={(e) => handleChange("poster", e.target.value)}
-                                    placeholder="URL da imagem ou faça upload"
-                                    className="flex-1"
+                                <Label>Categoria *</Label>
+                                <Controller
+                                    name="titulo.categoriaId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select value={field.value?.toString()} onValueChange={(val) => field.onChange(Number(val))}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione a categoria" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {categorias.map(c => (
+                                                    <SelectItem key={c.id} value={c.id.toString()}>{c.nome}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 />
-                                <Button type="button" variant="outline" className="gap-2 bg-transparent">
-                                    <Upload className="h-4 w-4" />
-                                    Upload
-                                </Button>
                             </div>
                         </div>
 
-                        <div className="flex gap-4 pt-4">
-                            <Button type="submit" className="flex-1">
-                                Cadastrar Filme
+                        {/* Imagem do Filme */}
+                        <div className="space-y-2">
+                            <Label htmlFor="imagem">Imagem / Poster</Label>
+                            <div className="flex gap-2">
+                                <Controller
+                                    name="titulo.imagem"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <div className="flex gap-2">
+                                            <Input
+                                                {...field}
+                                                placeholder="URL da imagem"
+                                                className="flex-1"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="gap-2"
+                                                onClick={() => {
+                                                    const input = document.createElement("input");
+                                                    input.type = "file";
+                                                    input.accept = "image/*";
+                                                    input.onchange = (e: any) => {
+                                                        const file = e.target.files[0];
+                                                        if (file) {
+                                                            const reader = new FileReader();
+                                                            reader.onload = () => {
+                                                                field.onChange(reader.result as string); // <-- aqui usamos field
+                                                            };
+                                                            reader.readAsDataURL(file);
+                                                        }
+                                                    };
+                                                    input.click();
+                                                }}
+                                            >
+                                                <Upload className="h-4 w-4" />
+                                                Upload
+                                            </Button>
+                                        </div>
+                                    )}
+                                />
+                            </div>
+                            {errors.titulo?.imagem && (
+                                <p className="text-red-500 text-sm">{errors.titulo.imagem.message}</p>
+                            )}
+                        </div>
+
+                        {/* Lista de Itens */}
+                        <div className="space-y-4">
+                            <Label>Itens do Filme</Label>
+                            {fields.map((fieldItem, index) => (
+                                <div key={fieldItem.id} className="grid grid-cols-3 gap-4 items-end">
+                                    <Controller
+                                        name={`itemList.${index}.numeroSerie`}
+                                        control={control}
+                                        render={({ field }) => <Input {...field} placeholder="Número de série" />}
+                                    />
+                                    <Controller
+                                        name={`itemList.${index}.dataAquisicao`}
+                                        control={control}
+                                        render={({ field }) => <Input {...field} type="date" />}
+                                    />
+                                    <Controller
+                                        name={`itemList.${index}.status`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Select value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="DISPONIVEL">DISPONIVEL</SelectItem>
+                                                    <SelectItem value="LOCADO">LOCADO</SelectItem>
+                                                    <SelectItem value="RESERVADO">RESERVADO</SelectItem>
+                                                    <SelectItem value="DANIFICADO">DANIFICADO</SelectItem>
+                                                    <SelectItem value="PERDIDO">PERDIDO</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                    <Button type="button" variant="destructive" onClick={() => remove(index)}>Remover</Button>
+                                </div>
+                            ))}
+                            <Button type="button" onClick={() => append({ numeroSerie: "", dataAquisicao: new Date().toISOString().slice(0,10), status: "DISPONIVEL", id: 0 })}>
+                                Adicionar Item
                             </Button>
+                        </div>
+
+                        {/* Submit */}
+                        <div className="flex gap-4 pt-4">
+                            <Button type="submit" className="flex-1" disabled={isSubmitting}>Cadastrar Filme</Button>
                             <Link href="/admin/filmes" className="flex-1">
-                                <Button type="button" variant="outline" className="w-full bg-transparent">
-                                    Cancelar
-                                </Button>
+                                <Button type="button" variant="outline" className="w-full">Cancelar</Button>
                             </Link>
                         </div>
                     </CardContent>

@@ -7,3 +7,9 @@ export interface Item{
     titulo: Titulo;
     status: string;
 }
+export interface ItemCreate{
+    id: number;
+    numeroSerie: string;
+    dataAquisicao: Date;
+    status: string;
+}
