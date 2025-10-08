@@ -31,4 +31,6 @@ public class ClasseService {
     public ClasseDTO save(ClasseDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
+
+    public void deleteByID(Long id){repository.deleteById(id);}
 }

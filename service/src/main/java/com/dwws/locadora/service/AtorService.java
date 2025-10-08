@@ -29,4 +29,6 @@ public class AtorService {
     public AtorDTO save(AtorDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
+
+    public void deleteByID(Long id){repository.deleteById(id);}
 }

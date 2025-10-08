@@ -30,4 +30,6 @@ public class DiretorService {
     public DiretorDTO save(DiretorDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
+
+    public void deleteByID(Long id){repository.deleteById(id);}
 }

@@ -41,4 +41,10 @@ public class AtorController {
     public ResponseEntity<AtorDTO> save(@RequestBody AtorDTO dto) {
         return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{idAtor}")
+    public ResponseEntity<Void> delete(@PathVariable Long idAtor) {
+        service.deleteByID(idAtor);
+        return ResponseEntity.noContent().build();
+    }
 }

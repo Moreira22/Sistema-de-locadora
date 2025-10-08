@@ -37,4 +37,10 @@ public class DiretorController {
     public ResponseEntity<DiretorDTO> save(@RequestBody DiretorDTO dto) {
         return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{idDiretor}")
+    public ResponseEntity<Void> delete(@PathVariable Long idDiretor) {
+        service.deleteByID(idDiretor);
+        return ResponseEntity.noContent().build();
+    }
 }

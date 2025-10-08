@@ -42,4 +42,10 @@ public class ClasseController {
     public ResponseEntity<ClasseDTO> save(@RequestBody ClasseDTO dto) {
         return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{idClasse}")
+    public ResponseEntity<Void> delete(@PathVariable Long idClasse) {
+        service.deleteByID(idClasse);
+        return ResponseEntity.noContent().build();
+    }
 }
