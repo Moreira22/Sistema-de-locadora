@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/label";
@@ -25,17 +25,17 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function SelectModel({ titulo, values, onSelect, onCreate, onEdit }: SelectModelProps) {
-    const [selectedId, setSelectedId] = useState<string | number | null>(null)
+    const [selectedId, setSelectedId] = useState< number | null>(null)
     const [openModal, setOpenModal] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
     })
 
     function handleSelectChange(value: string) {
         setSelectedId(value)
-        onSelect(value)
+        onSelect(Number(value));
     }
 
     function handleOpenCreate() {
@@ -84,7 +84,9 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit }: Sele
                 <Button variant="outline" size="icon" onClick={handleOpenCreate}>
                     <Plus/>
                 </Button>
-                <Button variant="outline" size="icon" onClick={handleOpenEdit} disabled={!selectedId}>
+                <Button variant="outline" size="icon"
+                        onClick={handleOpenEdit}
+                        disabled={!selectedId}>
                     <Pencil/>
                 </Button>
             </div>
@@ -97,12 +99,16 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit }: Sele
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                            <Label htmlFor="nome">Nome</Label>
-                            <Input id="nome" {...register("nome")} />
-                            {errors.nome && (
-                                <p className="text-sm text-red-500">{errors.nome.message}</p>
-                            )}
+                        <div className="space-y-2">
+                            <Label htmlFor="nome">Nome *</Label>
+                            <Controller
+                                name="nome"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input {...field} placeholder="Nome do filme" />
+                                )}
+                            />
+                            {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message}</p>}
                         </div>
 
                         <DialogFooter>

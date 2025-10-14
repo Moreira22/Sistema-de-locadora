@@ -1,20 +1,14 @@
 "use client"
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import Select from "react-select";
 import { Pencil, Plus } from "lucide-react";
 
 interface MultiSelectModelProps {
@@ -36,20 +30,15 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
     const [openModal, setOpenModal] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [editingId, setEditingId] = useState<number | null>(null)
-    const [popoverOpen, setPopoverOpen] = useState(false)
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
     })
 
-    function toggleSelection(id: number) {
-        setSelectedIds(prev => {
-            const newSelection = prev.includes(id)
-                ? prev.filter(item => item !== id)
-                : [...prev, id]
-            onSelect(newSelection)
-            return newSelection
-        })
+    const handleSelectChange = (selected: any) => {
+        const ids = selected ? selected.map((s: any) => s.value) : []
+        setSelectedIds(ids)
+        onSelect(ids)
     }
 
     function handleOpenCreate() {
@@ -59,7 +48,7 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
     }
 
     function handleOpenEdit() {
-        if (selectedIds.length !== 1) return // só pode editar 1 por vez
+        if (selectedIds.length !== 1) return
         const selectedItem = values.find(v => v.id === selectedIds[0])
         if (selectedItem) {
             setIsEditing(true)
@@ -83,41 +72,16 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
         <div className="flex flex-col space-y-2 w-full">
             <Label>{titulo} *</Label>
             <div className="flex items-center gap-2">
-                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="outline"
-                            className={cn(
-                                "w-[250px] justify-start text-left font-normal",
-                                selectedIds.length === 0 && "text-muted-foreground"
-                            )}
-                        >
-                            {selectedIds.length === 0
-                                ? `Selecione ${titulo}`
-                                : `${selectedIds.length} selecionado${selectedIds.length > 1 ? "s" : ""}`}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[250px] p-2">
-                        <div className="flex flex-col gap-1">
-                            {Array.isArray(values) && values.length > 0 ? (
-                                values.map((item) => (
-                                    <label
-                                        key={item.id}
-                                        className="flex items-center gap-2 cursor-pointer"
-                                    >
-                                        <Checkbox
-                                            checked={selectedIds.includes(item.id)}
-                                            onCheckedChange={() => toggleSelection(item.id)}
-                                        />
-                                        <span>{item.nome}</span>
-                                    </label>
-                                ))
-                            ) : (
-                                <p className="text-sm text-muted-foreground">Nenhum item disponível</p>
-                            )}
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                <div className="w-[250px]">
+                    <Select
+                        isMulti
+                        options={values.map(v => ({ label: v.nome, value: v.id }))}
+                        onChange={handleSelectChange}
+                        value={values.filter(v => selectedIds.includes(v.id)).map(v => ({ label: v.nome, value: v.id }))}
+                        placeholder={`Selecione ${titulo}`}
+                        classNamePrefix="react-select"
+                    />
+                </div>
 
                 <Button variant="outline" size="icon" onClick={handleOpenCreate}>
                     <Plus/>
@@ -140,18 +104,20 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                            <Label htmlFor="nome">Nome</Label>
-                            <Input id="nome" {...register("nome")} />
-                            {errors.nome && (
-                                <p className="text-sm text-red-500">{errors.nome.message}</p>
-                            )}
+                        <div className="space-y-2">
+                            <Label htmlFor="nome">Nome *</Label>
+                            <Controller
+                                name="nome"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input {...field} placeholder="Nome do filme" />
+                                )}
+                            />
+                            {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message}</p>}
                         </div>
 
                         <DialogFooter>
-                            <Button type="submit">
-                                {isEditing ? "Salvar alterações" : "Cadastrar"}
-                            </Button>
+                            <Button type="submit">{isEditing ? "Salvar alterações" : "Cadastrar"}</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
