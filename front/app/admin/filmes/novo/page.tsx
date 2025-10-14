@@ -201,12 +201,18 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                     control={control}
                                     render={({ field }) => (
                                         <Select value={field.value?.toString()} onValueChange={(val) => field.onChange(Number(val))}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a classe" />
+                                            <SelectTrigger  className="w-[250px]">
+                                                <SelectValue placeholder={
+                                                    classes.length === 0
+                                                        ? `Nenhum classe cadastrado`
+                                                        : `Selecione uma classe`
+                                                } />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {classes.map(c => (
-                                                    <SelectItem key={c.id} value={c.id.toString()}>{c.nome}</SelectItem>
+                                                    <SelectItem key={c.id} value={String(c.id)}>
+                                                        {c.nome}
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -219,13 +225,20 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                     name="titulo.categoriaId"
                                     control={control}
                                     render={({ field }) => (
-                                        <Select value={field.value?.toString()} onValueChange={(val) => field.onChange(Number(val))}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a categoria" />
+                                        <Select value={field.value?.toString()}
+                                                onValueChange={(val) => field.onChange(Number(val))}>
+                                            <SelectTrigger  className="w-[250px]">
+                                                <SelectValue placeholder={
+                                                    categorias.length === 0
+                                                        ? `Nenhuma categoria cadastrado`
+                                                        : `Selecione uma categoria`
+                                                } />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {categorias.map(c => (
-                                                    <SelectItem key={c.id} value={c.id.toString()}>{c.nome}</SelectItem>
+                                                    <SelectItem key={c.id} value={String(c.id)}>
+                                                        {c.nome}
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -296,7 +309,7 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                         <div>
                             <MultiSelectModel
                                 titulo="Atores"
-                                values={atores}
+                                values={atores ?? []}
                                 onSelect={(id) => console.log("Selecionado:", id)}
                                 onCreate={(nome) => console.log("Criado:", nome)}
                                 onEdit={(id, nome) => console.log("Editado:", id, nome)}

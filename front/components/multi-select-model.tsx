@@ -99,18 +99,22 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
                     </PopoverTrigger>
                     <PopoverContent className="w-[250px] p-2">
                         <div className="flex flex-col gap-1">
-                            {values.map((item) => (
-                                <label
-                                    key={item.id}
-                                    className="flex items-center gap-2 cursor-pointer"
-                                >
-                                    <Checkbox
-                                        checked={selectedIds.includes(item.id)}
-                                        onCheckedChange={() => toggleSelection(item.id)}
-                                    />
-                                    <span>{item.nome}</span>
-                                </label>
-                            ))}
+                            {Array.isArray(values) && values.length > 0 ? (
+                                values.map((item) => (
+                                    <label
+                                        key={item.id}
+                                        className="flex items-center gap-2 cursor-pointer"
+                                    >
+                                        <Checkbox
+                                            checked={selectedIds.includes(item.id)}
+                                            onCheckedChange={() => toggleSelection(item.id)}
+                                        />
+                                        <span>{item.nome}</span>
+                                    </label>
+                                ))
+                            ) : (
+                                <p className="text-sm text-muted-foreground">Nenhum item disponível</p>
+                            )}
                         </div>
                     </PopoverContent>
                 </Popover>

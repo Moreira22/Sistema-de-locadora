@@ -9,13 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface DiretorRepository  extends JpaRepository<Diretor, Long>{
     @Query("SELECT NEW com.dwws.locadora.service.dto.DiretorDTO(d.id, d.nome)"+
             "FROM Diretor d")
-    Page<DiretorDTO> listAll(Pageable pageable);
+    List<DiretorDTO> listAll();
 
     Optional<Diretor> findByNome(String nome);
 

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -20,8 +22,8 @@ public class AtorService {
 
     public AtorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<AtorDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<AtorDTO> findAll() {
+        return repository.listAll();
     }
 
     public AtorDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }

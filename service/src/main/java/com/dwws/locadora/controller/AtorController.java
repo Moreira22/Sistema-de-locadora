@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/ator")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,8 +30,8 @@ public class AtorController {
     private final AtorService service;
 
     @GetMapping
-    public ResponseEntity<Page<AtorDTO>> findAll(Pageable pageable) {
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<List<AtorDTO>> findAll( ) {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idAtor}")
