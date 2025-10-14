@@ -12,13 +12,19 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Upload } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Upload } from "lucide-react";
+import {SelectModel} from "@/components/select-model";
+import {MultiSelectModel} from "@/components/multi-select-model"
 
 import { useCategoria } from "@/hooks/categoria"
 import { useClasse } from "@/hooks/classe"
 import { Categoria } from "@/model/categoria"
 import { Classe } from "@/model/classe"
+import {useDiretor} from "@/hooks/diretiro";
+import {useAtor} from "@/hooks/ator";
+import {Diretor} from "@/model/diretor";
+import {Ator} from "@/model/ator";
 
 interface FilmesFormPageProps {
     isEdit?: boolean
@@ -69,10 +75,14 @@ type FilmesFormData = z.infer<typeof schema>
 
 export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageProps) {
     const router = useRouter()
-    const [categorias, setCategorias] = useState<Categoria[]>([])
-    const [classe, setClasse] = useState<Classe[]>([])
-    const { getCategorias } = useCategoria()
-    const { getClasses } = useClasse()
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [classes, setClasses] = useState<Classe[]>([]);
+    const [diretores, setDiretores] = useState<Diretor[]>([]);
+    const [atores, setAtores] = useState<Ator[]>([]);
+    const { getCategorias } = useCategoria();
+    const { getClasses } = useClasse();
+    const { getDiretor }= useDiretor();
+    const {getAtores} = useAtor();
 
     const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FilmesFormData>({
         resolver: zodResolver(schema),
@@ -98,10 +108,14 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
 
     useEffect(() => {
         const fetchDados = async () => {
-            const cat = await getCategorias()
-            const cls = await getClasses()
-            setCategorias(cat)
-            setClasse(cls)
+            const cat = await getCategorias();
+            const cls = await getClasses();
+            const drt = await  getDiretor();
+            const atr = await getAtores();
+            setCategorias(cat);
+            setClasses(cls);
+            setDiretores(drt);
+            setAtores(atr);
         }
         fetchDados()
     }, [])
@@ -191,7 +205,7 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                                 <SelectValue placeholder="Selecione a classe" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {classe.map(c => (
+                                                {classes.map(c => (
                                                     <SelectItem key={c.id} value={c.id.toString()}>{c.nome}</SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -265,6 +279,28 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                             {errors.titulo?.imagem && (
                                 <p className="text-red-500 text-sm">{errors.titulo.imagem.message}</p>
                             )}
+                        </div>
+
+                        {/* Diretor */}
+                        <div>
+                            <SelectModel
+                                titulo="Diretor"
+                                values={diretores}
+                                onSelect={(id) => console.log("Selecionado:", id)}
+                                onCreate={(nome) => console.log("Criado:", nome)}
+                                onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                            />
+                        </div>
+
+                        {/* Ator */}
+                        <div>
+                            <MultiSelectModel
+                                titulo="Atores"
+                                values={atores}
+                                onSelect={(id) => console.log("Selecionado:", id)}
+                                onCreate={(nome) => console.log("Criado:", nome)}
+                                onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                            />
                         </div>
 
                         {/* Lista de Itens */}
