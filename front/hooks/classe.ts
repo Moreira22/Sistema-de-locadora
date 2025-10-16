@@ -1,7 +1,7 @@
 import Api from "@/server/server";
-import {Classe} from "@/model/classe";
+import {Classe, ClasseLista} from "@/model/classe";
 export const useClasse = () =>{
-    const getClasses = async (): Promise<Classe[] | null> => {
+    const getClasses = async (): Promise<ClasseLista[] | null> => {
         try{
             const respose = await Api.get('/classe');
             return respose.data;

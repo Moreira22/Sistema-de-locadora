@@ -14,4 +14,8 @@ import java.util.List;
 public class CreateTituloDTO implements Serializable{
     private TituloListDTO titulo;
     private List<ItemDTO> itemList;
+    private Long classe;
+    private Long categoria;
+    private Long diretor;
+    private List<Long> atores;
 }

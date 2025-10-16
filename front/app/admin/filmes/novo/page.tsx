@@ -20,7 +20,7 @@ import {MultiSelectModel} from "@/components/multi-select-model"
 import { useCategoria } from "@/hooks/categoria"
 import { useClasse } from "@/hooks/classe"
 import { Categoria } from "@/model/categoria"
-import { Classe } from "@/model/classe"
+import {Classe, ClasseLista} from "@/model/classe"
 import {useDiretor} from "@/hooks/diretiro";
 import {useAtor} from "@/hooks/ator";
 import {Diretor} from "@/model/diretor";
@@ -58,9 +58,8 @@ const schema = z.object({
         nome: z.string().min(1, "Nome é obrigatório"),
         ano: z.number().min(1900, "Ano inválido"),
         sinopse: z.string().min(1, "Sinopse é obrigatória"),
-        classeId: z.number(),
-        categoriaId: z.number(),
-        imagem: z.string().optional(),
+        classeId: z.number().optional(),
+        imagem: z.string(),
     }),
     itemList: z.array(
         z.object({
@@ -76,9 +75,13 @@ type FilmesFormData = z.infer<typeof schema>
 export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageProps) {
     const router = useRouter()
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [classes, setClasses] = useState<Classe[]>([]);
+    const [classes, setClasses] = useState<ClasseLista[]>([]);
     const [diretores, setDiretores] = useState<Diretor[]>([]);
     const [atores, setAtores] = useState<Ator[]>([]);
+    const [idCategria, setIdCategoria] = useState<number>(null);
+    const [idClasse, setIdClasse] = useState<number>(null);
+    const [idDiretor, setIdDiretor] = useState<number>(null);
+    const [idsAtores, setIdsAtores] = useState<number[]>([null]);
     const { getCategorias } = useCategoria();
     const { getClasses } = useClasse();
     const { getDiretor }= useDiretor();
@@ -91,9 +94,7 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                 nome: "",
                 ano: new Date().getFullYear(),
                 sinopse: "",
-                classeId: 0,
-                categoriaId: 0,
-                imagem: ""
+                imagem: "",
             },
             itemList: [
                 { numeroSerie: "", dataAquisicao: new Date().toISOString().slice(0, 10), status: "DISPONIVEL" }
@@ -121,7 +122,18 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
     }, [])
 
     const onSubmit = async (data: FilmesFormData) => {
-        console.log("Dados enviados:", data)
+        const obj = {
+            titulo: {
+                ...data.titulo,
+                categoriaId: idCategria,
+                classeId: idClasse,
+            },
+            itemList: data.itemList,
+            diretorId: idDiretor,
+            atoresIds: idsAtores,
+        }
+        console.log("Dados prontos para envio:", obj)
+
         // Aqui você chamaria sua API para salvar o título e itens
         // router.push("/admin/filmes")
     }
@@ -195,54 +207,21 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                         {/* Classe e Categoria */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>Classe *</Label>
-                                <Controller
-                                    name="titulo.classeId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Select value={field.value?.toString()} onValueChange={(val) => field.onChange(Number(val))}>
-                                            <SelectTrigger  className="w-[250px]">
-                                                <SelectValue placeholder={
-                                                    classes.length === 0
-                                                        ? `Nenhum classe cadastrado`
-                                                        : `Selecione uma classe`
-                                                } />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {classes.map(c => (
-                                                    <SelectItem key={c.id} value={String(c.id)}>
-                                                        {c.nome}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    )}
+                                <SelectModel
+                                    titulo="Classes"
+                                    values={classes}
+                                    onSelect={(id) => setIdClasse(id)}
+                                    onCreate={(nome) => console.log("Criado:", nome)}
+                                    onEdit={(id, nome) => console.log("Editado:", id, nome)}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label>Categoria *</Label>
-                                <Controller
-                                    name="titulo.categoriaId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Select value={field.value?.toString()}
-                                                onValueChange={(val) => field.onChange(Number(val))}>
-                                            <SelectTrigger  className="w-[250px]">
-                                                <SelectValue placeholder={
-                                                    categorias.length === 0
-                                                        ? `Nenhuma categoria cadastrado`
-                                                        : `Selecione uma categoria`
-                                                } />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {categorias.map(c => (
-                                                    <SelectItem key={c.id} value={String(c.id)}>
-                                                        {c.nome}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    )}
+                                <SelectModel
+                                    titulo="Categorias"
+                                    values={categorias}
+                                    onSelect={(id) => setIdCategoria(id)}
+                                    onCreate={(nome) => console.log("Criado:", nome)}
+                                    onEdit={(id, nome) => console.log("Editado:", id, nome)}
                                 />
                             </div>
                         </div>
@@ -250,41 +229,54 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                         {/* Imagem do Filme */}
                         <div className="space-y-2">
                             <Label htmlFor="imagem">Imagem / Poster</Label>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 items-center">
                                 <Controller
                                     name="titulo.imagem"
                                     control={control}
                                     render={({ field }) => (
-                                        <div className="flex gap-2">
-                                            <Input
-                                                {...field}
-                                                placeholder="URL da imagem"
-                                                className="flex-1"
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                className="gap-2"
-                                                onClick={() => {
-                                                    const input = document.createElement("input");
-                                                    input.type = "file";
-                                                    input.accept = "image/*";
-                                                    input.onchange = (e: any) => {
-                                                        const file = e.target.files[0];
-                                                        if (file) {
-                                                            const reader = new FileReader();
-                                                            reader.onload = () => {
-                                                                field.onChange(reader.result as string); // <-- aqui usamos field
-                                                            };
-                                                            reader.readAsDataURL(file);
-                                                        }
-                                                    };
-                                                    input.click();
-                                                }}
-                                            >
-                                                <Upload className="h-4 w-4" />
-                                                Upload
-                                            </Button>
+                                        <div className="flex flex-col gap-2 w-full">
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    {...field}
+                                                    placeholder="URL da imagem"
+                                                    className="flex-1"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    className="gap-2"
+                                                    onClick={() => {
+                                                        const input = document.createElement("input");
+                                                        input.type = "file";
+                                                        input.accept = "image/*";
+                                                        input.onchange = (e: any) => {
+                                                            const file = e.target.files[0];
+                                                            if (file) {
+                                                                const reader = new FileReader();
+                                                                reader.onload = () => {
+                                                                    field.onChange(reader.result as string); // salva base64 no campo
+                                                                };
+                                                                reader.readAsDataURL(file);
+                                                            }
+                                                        };
+                                                        input.click();
+                                                    }}
+                                                >
+                                                    <Upload className="h-4 w-4" />
+                                                    Upload
+                                                </Button>
+                                            </div>
+
+                                            {/* Preview da imagem */}
+                                            {field.value && (
+                                                <div className="mt-2 flex justify-center">
+                                                    <img
+                                                        src={field.value}
+                                                        alt="Pré-visualização do poster"
+                                                        className="max-h-64 rounded-md shadow-md border border-gray-300 object-contain"
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 />
@@ -294,26 +286,31 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                             )}
                         </div>
 
-                        {/* Diretor */}
-                        <div>
-                            <SelectModel
-                                titulo="Diretor"
-                                values={diretores}
-                                onSelect={(id) => console.log("Selecionado:", id)}
-                                onCreate={(nome) => console.log("Criado:", nome)}
-                                onEdit={(id, nome) => console.log("Editado:", id, nome)}
-                            />
-                        </div>
-
-                        {/* Ator */}
-                        <div>
-                            <MultiSelectModel
-                                titulo="Atores"
-                                values={atores ?? []}
-                                onSelect={(id) => console.log("Selecionado:", id)}
-                                onCreate={(nome) => console.log("Criado:", nome)}
-                                onEdit={(id, nome) => console.log("Editado:", id, nome)}
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                {/* Diretor */}
+                                <div>
+                                    <SelectModel
+                                        titulo="Diretor"
+                                        values={diretores}
+                                        onSelect={(id) => setIdDiretor(id)}
+                                        onCreate={(nome) => console.log("Criado:", nome)}
+                                        onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                {/* Ator */}
+                                <div>
+                                    <MultiSelectModel
+                                        titulo="Atores"
+                                        values={atores ?? []}
+                                        onSelect={(id) => setIdsAtores(id)}
+                                        onCreate={(nome) => console.log("Criado:", nome)}
+                                        onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Lista de Itens */}
@@ -358,7 +355,9 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                         {/* Submit */}
                         <div className="flex gap-4 pt-4">
                             <Button type="submit" className="flex-1" disabled={isSubmitting}>Cadastrar Filme</Button>
-                            <Link href="/admin/filmes" className="flex-1">
+                            <Link
+                                href="/admin/filmes"
+                                className="flex-1">
                                 <Button type="button" variant="outline" className="w-full">Cancelar</Button>
                             </Link>
                         </div>

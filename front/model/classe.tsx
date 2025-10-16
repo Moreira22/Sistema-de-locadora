@@ -4,3 +4,7 @@ export interface Classe {
      valor: number;
      prazoDevolucao: string;
 }
+export interface ClasseLista {
+    id: number;
+    nome: string;
+}
