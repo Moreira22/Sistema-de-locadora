@@ -25,6 +25,8 @@ import {useDiretor} from "@/hooks/diretiro";
 import {useAtor} from "@/hooks/ator";
 import {Diretor} from "@/model/diretor";
 import {Ator} from "@/model/ator";
+import {SelectClasse} from "@/components/select-classe";
+import {sucesso, erro, sucessoPut, sucessoDelete, erroDelete} from "@/lib/avisos"
 
 interface FilmesFormPageProps {
     isEdit?: boolean
@@ -74,18 +76,14 @@ type FilmesFormData = z.infer<typeof schema>
 
 export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageProps) {
     const router = useRouter()
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [classes, setClasses] = useState<ClasseLista[]>([]);
-    const [diretores, setDiretores] = useState<Diretor[]>([]);
-    const [atores, setAtores] = useState<Ator[]>([]);
     const [idCategria, setIdCategoria] = useState<number>(null);
     const [idClasse, setIdClasse] = useState<number>(null);
     const [idDiretor, setIdDiretor] = useState<number>(null);
     const [idsAtores, setIdsAtores] = useState<number[]>([null]);
-    const { getCategorias } = useCategoria();
-    const { getClasses } = useClasse();
-    const { getDiretor }= useDiretor();
-    const {getAtores} = useAtor();
+    const { getCategorias, categorias, postCategoria, putCategoria, deleteCategoria } = useCategoria();
+    const { getClasses , classes, postClasse, putClasse, deleteClasse} = useClasse();
+    const { getDiretor, diretores, postDiretor, putDiretor, deleteDiretor}= useDiretor();
+    const {getAtores, atores, postAtor, putAtor, deleteAtor} = useAtor();
 
     const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FilmesFormData>({
         resolver: zodResolver(schema),
@@ -109,17 +107,14 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
 
     useEffect(() => {
         const fetchDados = async () => {
-            const cat = await getCategorias();
-            const cls = await getClasses();
-            const drt = await  getDiretor();
-            const atr = await getAtores();
-            setCategorias(cat);
-            setClasses(cls);
-            setDiretores(drt);
-            setAtores(atr);
+            await getCategorias();
+            await getClasses();
+            await  getDiretor();
+            await getAtores();
         }
         fetchDados()
     }, [])
+
 
     const onSubmit = async (data: FilmesFormData) => {
         const obj = {
@@ -136,6 +131,101 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
 
         // Aqui você chamaria sua API para salvar o título e itens
         // router.push("/admin/filmes")
+    }
+
+    const postCampo = async (id?: number, nome: string, tipo: number) => {
+        const obj = { nome };
+
+        const map = {
+            1: {
+                post: postDiretor,
+                put: putDiretor,
+                get: getDiretor,
+                entidade: "Diretor",
+            },
+            2: {
+                post: postCategoria,
+                put: putCategoria,
+                get: getCategorias,
+                entidade: "Categoria",
+            },
+            3: {
+                post: postAtor,
+                put: putAtor,
+                get: getAtores,
+                entidade: "Ator",
+            },
+        } as const;
+
+        const selecionado = map[tipo as keyof typeof map];
+        if (!selecionado) {
+            console.log("Tipo inválido:", tipo);
+            return;
+        }
+
+        try {
+            if (id) {
+                // Atualização
+                await selecionado.put(id, obj);
+                sucessoPut(`${selecionado.entidade}`);
+            } else {
+                // Criação
+                await selecionado.post(obj);
+                sucesso(`${selecionado.entidade} `);
+            }
+
+            await selecionado.get();
+        } catch (error) {
+            erro(`${selecionado.entidade.toLowerCase()}`);
+            console.error(error);
+        }
+    };
+
+    const postCampoClasse = async (id?: number, nome: string, valor: number, prazoDevolucao: number) =>{
+        const objClasse = { nome, valor, prazoDevolucao };
+        await postClasse(objClasse).then(() => {
+            sucesso("Ator");
+            return getClasses();
+        }).catch(() => erro("ator"));
+    }
+
+    const deleteCampo = async (id: number, tipo: number) => {
+        const map = {
+            1: {
+                delete: deleteDiretor,
+                get: getDiretor,
+                entidade: "Diretor",
+            },
+            2: {
+                delete: deleteCategoria,
+                get: getCategorias,
+                entidade: "Categoria",
+            },
+            3: {
+                delete: deleteAtor,
+                get: getAtores,
+                entidade: "Ator",
+            },
+            4: {
+                delete: deleteClasse,
+                get: getClasses,
+                entidade: "Classe",
+            },
+        } as const;
+
+        const selecionado = map[tipo as keyof typeof map];
+        if (!selecionado) {
+            console.log("Tipo inválido:", tipo);
+            return;
+        }
+        try {
+            await selecionado.delete(id);
+            sucessoDelete(`${selecionado.entidade}`);
+            await selecionado.get();
+        } catch (error) {
+            erroDelete(`${selecionado.entidade.toLowerCase()}`);
+            console.error(error);
+        }
     }
 
     return (
@@ -207,12 +297,13 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                         {/* Classe e Categoria */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <SelectModel
+                                <SelectClasse
                                     titulo="Classes"
                                     values={classes}
                                     onSelect={(id) => setIdClasse(id)}
-                                    onCreate={(nome) => console.log("Criado:", nome)}
+                                    onCreate={(nome, valor, prazoDevolucao) => postCampoClasse(nome, valor, prazoDevolucao)}
                                     onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                    onDelete={(id)=> deleteCampo(id, 4) }
                                 />
                             </div>
                             <div className="space-y-2">
@@ -220,8 +311,9 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                     titulo="Categorias"
                                     values={categorias}
                                     onSelect={(id) => setIdCategoria(id)}
-                                    onCreate={(nome) => console.log("Criado:", nome)}
-                                    onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                    onCreate={(nome) => postCampo(nome, 2)}
+                                    onEdit={(id, nome) => postCampo(id, nome, 2)}
+                                    onDelete={(id)=> deleteCampo(id, 2) }
                                 />
                             </div>
                         </div>
@@ -294,8 +386,9 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                         titulo="Diretor"
                                         values={diretores}
                                         onSelect={(id) => setIdDiretor(id)}
-                                        onCreate={(nome) => console.log("Criado:", nome)}
-                                        onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                        onCreate={(nome) => postCampo(nome, 1)}
+                                        onEdit={(id, nome) => postCampo(id, nome, 1)}
+                                        onDelete={(id)=> deleteCampo(id, 1) }
                                     />
                                 </div>
                             </div>
@@ -306,8 +399,10 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                         titulo="Atores"
                                         values={atores ?? []}
                                         onSelect={(id) => setIdsAtores(id)}
-                                        onCreate={(nome) => console.log("Criado:", nome)}
-                                        onEdit={(id, nome) => console.log("Editado:", id, nome)}
+                                        onCreate={(nome) => postCampo(nome, 3)}
+                                        onEdit={(id, nome) => postCampo(id, nome, 3)}
+                                        onDelete={(id)=> deleteCampo(id, 3) }
+
                                     />
                                 </div>
                             </div>

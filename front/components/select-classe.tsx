@@ -10,22 +10,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Pencil, Plus, Trash } from "lucide-react";
-interface SelectModelProps {
+interface SelectClasseProps {
     titulo: string
     values: { id: number; nome: string }[]
     onSelect: (id: number) => void
-    onCreate?: (nome: string) => Promise<void> | void
+    onCreate?: (nome: string, valor: number, prazoDevolucao: number) => Promise<void> | void
     onEdit?: (id: number, nome: string) => Promise<void> | void
     onDelete: (id: number) => void
 }
 
 const schema = z.object({
     nome: z.string().min(1, "Nome é obrigatório"),
+    valor: z.number().min(1, "Valor é obrigatório"),
+    prazoDevolucao:  z.number().min(1, "Pazo Devolução é obrigatório"),
 })
 
 type FormData = z.infer<typeof schema>
 
-export function SelectModel({ titulo, values, onSelect, onCreate, onEdit, onDelete }: SelectModelProps) {
+export function SelectClasse({ titulo, values, onSelect, onCreate, onEdit, onDelete }: SelectClasseProps) {
     const [selectedId, setSelectedId] = useState< number | null>(null)
     const [openModal, setOpenModal] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -35,7 +37,7 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit, onDele
     })
 
     function handleSelectChange(value: string) {
-        setSelectedId(value)
+        setSelectedId(Number(value))
         onSelect(Number(value));
     }
 
@@ -59,7 +61,7 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit, onDele
         if (isEditing && selectedId && onEdit) {
             await onEdit(selectedId, data.nome)
         } else if (!isEditing && onCreate) {
-            await onCreate(data.nome)
+            await onCreate(data.nome, data.valor, data.prazoDevolucao)
         }
         setOpenModal(false)
         reset()
@@ -70,7 +72,6 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit, onDele
             onDelete(selectedId);
         }
     }
-
 
     return (
         <div className="flex flex-col space-y-2 w-full">
@@ -116,10 +117,39 @@ export function SelectModel({ titulo, values, onSelect, onCreate, onEdit, onDele
                                 name="nome"
                                 control={control}
                                 render={({ field }) => (
-                                    <Input {...field} placeholder="Nome" />
+                                    <Input {...field} placeholder="Nome do filme" />
                                 )}
                             />
                             {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message}</p>}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="valor">Valor *</Label>
+                                <Controller
+                                    name="valor"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input {...field} placeholder="valor da classe"
+                                               type="number"
+                                               onChange={(e) => field.onChange(Number(e.target.value))}/>
+                                    )}
+                                />
+                                {errors.valor && <p className="text-red-500 text-sm">{errors.valor.message}</p>}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="valor">Prazo Devolução*</Label>
+                                <Controller
+                                    name="prazoDevolucao"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input {...field} placeholder="Prazo Devolução da classe"
+                                               type="number"
+                                               onChange={(e) => field.onChange(Number(e.target.value))}
+                                        />
+                                    )}
+                                />
+                                {errors.prazoDevolucao && <p className="text-red-500 text-sm">{errors.prazoDevolucao.message}</p>}
+                            </div>
                         </div>
 
                         <DialogFooter>

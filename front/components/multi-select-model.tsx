@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import Select from "react-select";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react";
 
 interface MultiSelectModelProps {
     titulo: string
@@ -17,6 +17,7 @@ interface MultiSelectModelProps {
     onSelect: (ids: number[]) => void
     onCreate?: (nome: string) => Promise<void> | void
     onEdit?: (id: number, nome: string) => Promise<void> | void
+    onDelete: (id: number) => void
 }
 
 const schema = z.object({
@@ -25,7 +26,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
-export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }: MultiSelectModelProps) {
+export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit, onDelete }: MultiSelectModelProps) {
     const [selectedIds, setSelectedIds] = useState<number[]>([])
     const [openModal, setOpenModal] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -67,6 +68,13 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
         setOpenModal(false)
         reset()
     }
+    function handleOpenDelete(){
+        if (selectedIds.length !== 1) return
+        const selectedItem = values.find(v => v.id === selectedIds[0])
+        if (selectedItem) {
+            onDelete(selectedItem.id);
+        }
+    }
 
     return (
         <div className="flex flex-col space-y-2 w-full">
@@ -93,6 +101,9 @@ export function MultiSelectModel({ titulo, values, onSelect, onCreate, onEdit }:
                     disabled={selectedIds.length !== 1}
                 >
                     <Pencil/>
+                </Button>
+                <Button variant="outline" size="icon" onClick={handleOpenDelete}>
+                    <Trash/>
                 </Button>
             </div>
 

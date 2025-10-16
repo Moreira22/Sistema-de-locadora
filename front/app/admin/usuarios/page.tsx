@@ -14,16 +14,13 @@ import {useRouter} from "next/navigation";
 export default function UsuariosPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
-    const { getUsuarios, getUsuarioByNome } = useUsuario();
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const { getUsuarios, getUsuarioByNome, usuarios } = useUsuario();
+    // const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
     useEffect(() => {
         const fetchUsuarios = async () => {
-            const data = await getUsuarios()
-            console.log("Usuarios API:", data) // verifique estrutura
-            if (data && Array.isArray(data.content)) {
-                setUsuarios(data.content)
-            }
+            await getUsuarios()
+            console.log("Usuarios API:", usuarios) // verifique estrutura
         }
         fetchUsuarios()
     }, []);

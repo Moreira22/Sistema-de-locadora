@@ -26,6 +26,11 @@ const menuItems = [
         href: "/admin/locacao",
         icon: Film,
     },
+    {
+        title: "Usuários",
+        href: "/admin/usuarios",
+        icon: Users,
+    },
 ]
 
 export function FuncionarioSidebar() {

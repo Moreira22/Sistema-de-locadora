@@ -2,11 +2,18 @@ import {Usuario} from "@/model/usuario";
 import {Funcionario} from "@/model/funcionario";
 import Api from "@/server/server";
 import {Perfil} from "@/model/perfil";
+import {useState} from "react";
 export const useUsuario = () => {
+    // List
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+    // By id / nome
+    const [usuario, setUsuario] = useState<Usuario | Funcionario| null>();
 
     const getUsuarios = async (): Promise<Usuario[]> => {
         try {
             const response = await Api.get('/usuarios');
+            setUsuarios(response.data.content);
             return response.data; // Isso deve ser um array
         } catch (error) {
             console.error(error);
@@ -16,6 +23,7 @@ export const useUsuario = () => {
     const getFuncionarios = async (): Promise<Funcionario[] | null> => {
         try{
             const respose = await Api.get('/usuarios/funcioarios');
+            setFuncionarios(respose.data.content);
             return respose.data;
         }catch (error){
             console.error('GET', error);
@@ -25,6 +33,7 @@ export const useUsuario = () => {
     const getUsuarioById = async (userId: number): Promise<Usuario | Funcionario| null> => {
         try {
             const response = await Api.get(`/usuarios/${userId}`);
+            setUsuario(response.data);
             return response.data;
         } catch (error) {
             console.error('GET BY ID', error);
@@ -34,6 +43,7 @@ export const useUsuario = () => {
     const getUsuarioByNome = async (nome: string): Promise<Usuario | Funcionario| null> => {
         try {
             const response = await Api.get(`/usuarios/${nome}`);
+            setUsuario(response.data);
             return response.data;
         } catch (error) {
             console.error('GET BY ID', error);
@@ -43,6 +53,7 @@ export const useUsuario = () => {
     const postUsuario = async (user: any): Promise<any | null> => {
         try {
             const response = await Api.post('/usuarios', user);
+            setUsuario(response.data);
             return response.data;
         } catch (error) {
             console.error('POST', error);
@@ -78,5 +89,5 @@ export const useUsuario = () => {
         }
     };
 
-    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil };
+    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, usuarios, funcionarios, usuario};
 };

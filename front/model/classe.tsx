@@ -8,3 +8,8 @@ export interface ClasseLista {
     id: number;
     nome: string;
 }
+export interface ClasseCreate {
+    nome: string;
+    valor?: number;
+    prazoDevolucao?: number;
+}
