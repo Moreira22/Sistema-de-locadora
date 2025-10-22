@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface FuncionarioMapper {
 
     @Mapping(source = "perfil.id", target = "idPerfil")
-    @Mapping(source = "endereco", target = "endereco")
+    @Mapping(source = "endereco.id", target = "idEndereco")
     FuncionarioDTO toDto(Funcionario funcionario);
 
 
@@ -30,14 +30,10 @@ public interface FuncionarioMapper {
         f.setTelefone(dto.getTelefone());
         f.setAtivo(dto.getAtivo());
 
+
         if (dto.getIdPerfil() != null) {
             f.setPerfil(new Perfil(dto.getIdPerfil()));
         }
-
-        if (dto.getEndereco() != null) {
-            f.setEndereco(new Endereco(dto.getEndereco()));
-        }
-
         f.setCargo(dto.getCargo());
         f.setSalario(dto.getSalario());
         f.setDataAdmissao(dto.getDataAdmissao());

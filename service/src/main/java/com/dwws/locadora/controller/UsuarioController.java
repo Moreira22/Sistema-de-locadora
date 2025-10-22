@@ -3,6 +3,7 @@ package com.dwws.locadora.controller;
 import com.dwws.locadora.repository.PerfilRepository;
 import com.dwws.locadora.service.PerfilService;
 import com.dwws.locadora.service.UsuarioService;
+import com.dwws.locadora.service.dto.CreateUsuarioDTO;
 import com.dwws.locadora.service.dto.DropdownDTO;
 import com.dwws.locadora.service.dto.FuncionarioDTO;
 import com.dwws.locadora.service.dto.FuncionarioProjection;
@@ -49,7 +50,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> save(@RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> save(@RequestBody CreateUsuarioDTO dto) {
         return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
     }
 
