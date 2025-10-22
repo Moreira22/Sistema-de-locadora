@@ -1,6 +1,7 @@
 package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Titulo;
+import com.dwws.locadora.repository.TituloAtorRepository;
 import com.dwws.locadora.repository.TituloRepository;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
@@ -20,6 +21,8 @@ public class TituloService {
     private final TituloMapper mapper;
     private final TituloRepository repository;
     private final ItemService itemService;
+    private final TituloDiretorService tituloDiretorService;
+    private final TituloAtorService tituloAtorService;
 
     public Titulo findEntity(Long id){ return repository.findById(id).orElse(null); }
 
@@ -50,6 +53,9 @@ public class TituloService {
         CreateTituloDTO response = new CreateTituloDTO();
         response.setTitulo(tituloDTO);
         response.setItemList(savedItems);
+
+        tituloDiretorService.cadastraTituloDiretro(tituloDTO, dto.getDiretor());
+        tituloAtorService.cadastraTituloAtor(tituloDTO, dto.getAtores());
 
         return response;
     }

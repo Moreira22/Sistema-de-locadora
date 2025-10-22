@@ -20,13 +20,11 @@ public class AtorService {
 
     public Ator findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public AtorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
-
     public List<AtorDTO> findAll() {
         return repository.listAll();
     }
 
-    public AtorDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public AtorDTO findById(Long id){ return mapper.toDto(findEntity(id)); }
 
     public AtorDTO save(AtorDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));

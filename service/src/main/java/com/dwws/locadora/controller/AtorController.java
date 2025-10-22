@@ -36,7 +36,7 @@ public class AtorController {
 
     @GetMapping("/{idAtor}")
     public ResponseEntity<AtorDTO> findByID(@PathVariable("idAtor") Long idAtor) {
-        return new ResponseEntity<>(service.findByID(idAtor), HttpStatus.OK);
+        return new ResponseEntity<>(service.findById(idAtor), HttpStatus.OK);
     }
 
     @PostMapping
