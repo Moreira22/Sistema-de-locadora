@@ -9,7 +9,7 @@ export const sucesso = (entidade: string) =>
 export const erro = (entidade: string) =>
     toast({
         title: "Erro",
-        description: `Ocorreu um erro no ${entidade}.`,
+        description: `Ocorreu um erro com o cadastrado do ${entidade}.`,
         variant: "destructive",
     });
 export const sucessoPut = (entidade: string) =>

@@ -15,15 +15,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Perfil } from "@/model/perfil"
+import { UF } from "@/lib/enums/uf"
 
 // --- Schema Zod ---
 const usuarioSchema = z.object({
-    nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-    email: z.string().email("Email inválido"),
-    telefone: z.string().min(10, "Telefone inválido"),
-    cpf: z.string().min(11, "CPF inválido"),
-    login: z.string().min(3, "Login deve ter no mínimo 3 caracteres"),
-    senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+    usuario: z.object({
+        nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
+        email: z.string().email("Email inválido"),
+        telefone: z.string().min(10, "Telefone inválido"),
+        cpf: z.string().min(11, "CPF inválido"),
+        login: z.string().min(3, "Login deve ter no mínimo 3 caracteres"),
+        senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+        idPerfil: z.number().min(1, "Selecione um perfil"),
+    }),
     endereco: z.object({
         rua: z.string().optional(),
         bairro: z.string().optional(),
@@ -32,7 +36,6 @@ const usuarioSchema = z.object({
         uf: z.string().optional(),
         cep: z.string().optional(),
     }),
-    idPerfil: z.number().min(1, "Selecione um perfil"),
 })
 
 type UsuarioFormData = z.infer<typeof usuarioSchema>
@@ -47,15 +50,23 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
     const { postUsuario, putUsuario, getPerfil, getUsuarioById } = useUsuario()
     const [perfil, setPerfil] = useState<Perfil[]>([])
 
-    const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UsuarioFormData>({
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<UsuarioFormData>({
         resolver: zodResolver(usuarioSchema),
         defaultValues: {
-            nome: "",
-            email: "",
-            telefone: "",
-            cpf: "",
-            login: "",
-            senha: "",
+            usuario: {
+                nome: "",
+                email: "",
+                telefone: "",
+                cpf: "",
+                login: "",
+                senha: "",
+                idPerfil: 0,
+            },
             endereco: {
                 rua: "",
                 bairro: "",
@@ -64,7 +75,6 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                 uf: "",
                 cep: "",
             },
-            idPerfil: 0,
         },
     })
 
@@ -84,12 +94,15 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
             const data = await getUsuarioById(usuarioId)
             if (data) {
                 reset({
-                    nome: data.nome,
-                    email: data.email,
-                    telefone: data.telefone,
-                    cpf: data.cpf,
-                    login: data.login,
-                    senha: data.senha,
+                    usuario: {
+                        nome: data.nome,
+                        email: data.email,
+                        telefone: data.telefone,
+                        cpf: data.cpf,
+                        login: data.login,
+                        senha: data.senha,
+                        idPerfil: data.perfilId ?? 0,
+                    },
                     endereco: {
                         rua: data.endereco?.rua ?? "",
                         bairro: data.endereco?.bairro ?? "",
@@ -98,7 +111,6 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         uf: data.endereco?.uf ?? "",
                         cep: data.endereco?.cep ?? "",
                     },
-                    idPerfil: data.perfilId ?? 0,
                 })
             }
         }
@@ -114,11 +126,16 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
         }
 
         if (result) {
-            router.push("/admin/usuarios")
+            // router.push("/admin/usuarios")
         } else {
             alert("Erro ao salvar usuário")
         }
     }
+
+    const ufOptions = Object.values(UF).map((uf) => ({
+        value: uf,
+        label: uf,
+    }));
 
     return (
         <div className="space-y-6 max-w-3xl">
@@ -148,24 +165,28 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         {/* Login e senha */}
                         <div className="grid grid-cols-2 gap-4">
                             <Controller
-                                name="login"
+                                name="usuario.login"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="login">Login *</Label>
                                         <Input id="login" {...field} />
-                                        {errors.login && <p className="text-red-500 text-sm">{errors.login.message}</p>}
+                                        {errors.usuario?.login && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.login.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
                             <Controller
-                                name="senha"
+                                name="usuario.senha"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="senha">Senha *</Label>
                                         <Input id="senha" type="password" {...field} />
-                                        {errors.senha && <p className="text-red-500 text-sm">{errors.senha.message}</p>}
+                                        {errors.usuario?.senha && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.senha.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
@@ -174,24 +195,28 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         {/* Nome e Email */}
                         <div className="grid grid-cols-2 gap-4">
                             <Controller
-                                name="nome"
+                                name="usuario.nome"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="nome">Nome *</Label>
                                         <Input id="nome" {...field} />
-                                        {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message}</p>}
+                                        {errors.usuario?.nome && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.nome.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
                             <Controller
-                                name="email"
+                                name="usuario.email"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="email">Email *</Label>
                                         <Input id="email" type="email" {...field} />
-                                        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+                                        {errors.usuario?.email && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.email.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
@@ -200,24 +225,28 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         {/* Telefone e CPF */}
                         <div className="grid grid-cols-2 gap-4">
                             <Controller
-                                name="telefone"
+                                name="usuario.telefone"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="telefone">Telefone *</Label>
                                         <Input id="telefone" {...field} />
-                                        {errors.telefone && <p className="text-red-500 text-sm">{errors.telefone.message}</p>}
+                                        {errors.usuario?.telefone && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.telefone.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
                             <Controller
-                                name="cpf"
+                                name="usuario.cpf"
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
                                         <Label htmlFor="cpf">CPF *</Label>
                                         <Input id="cpf" {...field} />
-                                        {errors.cpf && <p className="text-red-500 text-sm">{errors.cpf.message}</p>}
+                                        {errors.usuario?.cpf && (
+                                            <p className="text-red-500 text-sm">{errors.usuario.cpf.message}</p>
+                                        )}
                                     </div>
                                 )}
                             />
@@ -225,14 +254,16 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
 
                         {/* Endereço */}
                         <div className="grid grid-cols-3 gap-4">
-                            {["rua","bairro","numero"].map((campo) => (
+                            {["rua", "bairro", "numero"].map((campo) => (
                                 <Controller
                                     key={campo}
                                     name={`endereco.${campo}` as const}
                                     control={control}
                                     render={({ field }) => (
                                         <div className="space-y-2">
-                                            <Label htmlFor={campo}>{campo.charAt(0).toUpperCase() + campo.slice(1)}</Label>
+                                            <Label htmlFor={campo}>
+                                                {campo.charAt(0).toUpperCase() + campo.slice(1)}
+                                            </Label>
                                             <Input id={campo} {...field} />
                                         </div>
                                     )}
@@ -241,24 +272,54 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                         </div>
 
                         <div className="grid grid-cols-3 gap-4">
-                            {["cidade","uf","cep"].map((campo) => (
+                            {["cidade", "cep"].map((campo) => (
                                 <Controller
                                     key={campo}
                                     name={`endereco.${campo}` as const}
                                     control={control}
                                     render={({ field }) => (
                                         <div className="space-y-2">
-                                            <Label htmlFor={campo}>{campo.charAt(0).toUpperCase() + campo.slice(1)}</Label>
+                                            <Label htmlFor={campo}>
+                                                {campo.charAt(0).toUpperCase() + campo.slice(1)}
+                                            </Label>
                                             <Input id={campo} {...field} />
                                         </div>
                                     )}
                                 />
                             ))}
+
+                            <Controller
+                                name="endereco.uf"
+                                control={control}
+                                render={({ field }) => (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="uf">UF *</Label>
+                                        <Select
+                                            value={field.value || ""}
+                                            onValueChange={(value) => field.onChange(value)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione o estado" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {ufOptions.map((uf) => (
+                                                    <SelectItem key={uf.value} value={uf.value}>
+                                                        {uf.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {errors.endereco?.uf && (
+                                            <p className="text-red-500 text-sm">{errors.endereco.uf.message}</p>
+                                        )}
+                                    </div>
+                                )}
+                            />
                         </div>
 
                         {/* Perfil */}
                         <Controller
-                            name="idPerfil"
+                            name="usuario.idPerfil"
                             control={control}
                             render={({ field }) => (
                                 <div className="space-y-2">
@@ -278,7 +339,9 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {errors.idPerfil && <p className="text-red-500 text-sm">{errors.idPerfil.message}</p>}
+                                    {errors.usuario?.idPerfil && (
+                                        <p className="text-red-500 text-sm">{errors.usuario.idPerfil.message}</p>
+                                    )}
                                 </div>
                             )}
                         />
@@ -294,7 +357,6 @@ export default function UsuarioFormPage({ isEdit = false, usuarioId }: UsuarioFo
                                 </Button>
                             </Link>
                         </div>
-
                     </CardContent>
                 </Card>
             </form>

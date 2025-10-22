@@ -6,26 +6,24 @@ import Link from "next/link"
 import { useForm, Controller, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Upload } from "lucide-react";
-import {SelectModel} from "@/components/select-model";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowLeft, Upload } from "lucide-react"
+import {SelectModel} from "@/components/select-model"
 import {MultiSelectModel} from "@/components/multi-select-model"
-
 import { useCategoria } from "@/hooks/categoria"
 import { useClasse } from "@/hooks/classe"
 import { Categoria } from "@/model/categoria"
 import {Classe, ClasseLista} from "@/model/classe"
-import {useDiretor} from "@/hooks/diretiro";
-import {useAtor} from "@/hooks/ator";
-import {Diretor} from "@/model/diretor";
-import {Ator} from "@/model/ator";
-import {SelectClasse} from "@/components/select-classe";
+import {useDiretor} from "@/hooks/diretiro"
+import {useAtor} from "@/hooks/ator"
+import {Diretor} from "@/model/diretor"
+import {Ator} from "@/model/ator"
+import {SelectClasse} from "@/components/select-classe"
 import {sucesso, erro, sucessoPut, sucessoDelete, erroDelete} from "@/lib/avisos"
 
 interface FilmesFormPageProps {
@@ -95,7 +93,7 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                 imagem: "",
             },
             itemList: [
-                { numeroSerie: "", dataAquisicao: new Date().toISOString().slice(0, 10), status: "DISPONIVEL" }
+                { numeroSerie: "DVD 1", dataAquisicao: new Date().toISOString().slice(0, 10), status: "DISPONIVEL" }
             ]
         }
     })
@@ -416,7 +414,17 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
                                     <Controller
                                         name={`itemList.${index}.numeroSerie`}
                                         control={control}
-                                        render={({ field }) => <Input {...field} placeholder="Número de série" />}
+                                        render={({ field }) => (
+                                            <Select value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="DVD_1">DVD 1</SelectItem>
+                                                    <SelectItem value="DVD_2">DVD 2</SelectItem>
+                                                    <SelectItem value="BLURAY">Blu-ray</SelectItem>
+                                                    <SelectItem value="DIGITAL">Digital</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
                                     />
                                     <Controller
                                         name={`itemList.${index}.dataAquisicao`}
