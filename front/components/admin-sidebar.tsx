@@ -28,7 +28,7 @@ const menuItems = [
     },
     {
         title: "Locações",
-        href: "/admin/locacao",
+        href: "/admin/locacoes",
         icon: Film,
     },
     {
