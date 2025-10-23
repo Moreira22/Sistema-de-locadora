@@ -18,6 +18,6 @@ public class ItemDTO implements Serializable{
     private Long id;
     private String numeroSerie;
     private LocalDate dataAquisicao;
-    private Long tituloId;
     private StatusItem status;
+    private TituloDTO titulo;
 }

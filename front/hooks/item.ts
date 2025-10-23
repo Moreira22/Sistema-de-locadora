@@ -1,10 +1,18 @@
 import Api from "@/server/server";
 import {Item} from "@/model/item";
 import {Titulo, CreateItem} from '@/model/titulo';
+import {useState} from "react";
 export const useItem = () =>{
+    // List
+    const [itens, setItens] = useState<Item[]>([]);
+    //
+    // By id / nome
+    const [item, setItem] = useState<Item>();
+
     const getItems = async (): Promise<Item[] | null> => {
         try{
             const respose = await Api.get('/item');
+            setItens(respose.data);
             return respose.data;
         }catch (error){
             console.error('GET', error);
@@ -23,6 +31,7 @@ export const useItem = () =>{
     const getItemById = async (idItem?: number): Promise<Item | null> => {
         try{
             const respose = await Api.get(`/item/${idItem}`);
+            setItem(respose.data);
             return respose.data;
         }catch (error){
             console.error('GET', error);
@@ -39,5 +48,5 @@ export const useItem = () =>{
         }
     };
 
-    return{getItems,postItem,getItemById,putitem};
+    return{getItems,postItem,getItemById,putitem, itens, item};
 }

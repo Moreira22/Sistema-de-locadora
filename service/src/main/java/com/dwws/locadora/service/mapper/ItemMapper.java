@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ItemMapper extends EntityMapper<ItemDTO, Item> {
     @Override
-    @Mapping(source = "titulo.id", target = "tituloId")
+    @Mapping(source = "titulo", target = "titulo")
     ItemDTO toDto(Item item);
 
     @Override

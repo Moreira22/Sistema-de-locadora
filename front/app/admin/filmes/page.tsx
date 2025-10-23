@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -8,60 +8,36 @@ import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-
-interface Movie {
-    id: number
-    titulo: string
-    ano: number
-    genero: string
-    duracao: string
-    disponivel: boolean
-    poster: string
-    precoLocacao: string
-}
+import { Film, AlertCircle } from "lucide-react"
+import {useItem} from "@/hooks/item";
+import {useRouter} from "next/navigation";
 
 export default function FilmesPage() {
-    const [searchTerm, setSearchTerm] = useState("")
+    const [searchTerm, setSearchTerm] = useState("");
+    const {getItems, itens } = useItem();
+    const router = useRouter();
 
-    // Dados de exemplo
-    const [filmes] = useState<Movie[]>([
-        {
-            id: 1,
-            titulo: "A Origem",
-            ano: 2010,
-            genero: "Ficção Científica",
-            duracao: "148 min",
-            disponivel: true,
-            poster: "/inception-movie-poster.png",
-            precoLocacao: "R$ 12,90",
-        },
-        {
-            id: 2,
-            titulo: "Matrix",
-            ano: 1999,
-            genero: "Ficção Científica",
-            duracao: "136 min",
-            disponivel: true,
-            poster: "/matrix-movie-poster.png",
-            precoLocacao: "R$ 9,90",
-        },
-        {
-            id: 3,
-            titulo: "Interestelar",
-            ano: 2014,
-            genero: "Ficção Científica",
-            duracao: "169 min",
-            disponivel: false,
-            poster: "/interstellar-movie-poster.png",
-            precoLocacao: "R$ 14,90",
-        },
-    ])
-
-    const filteredMovies = filmes.filter(
+    const filteredMovies = itens?.filter(
         (movie) =>
-            movie.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            movie.genero.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
+            movie.titulo.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            movie.titulo.categoriaNome.toLowerCase().includes(searchTerm.toLowerCase())
+    ) ?? [];
+
+    useEffect(() => {
+        const fetchItem = async () => {
+            await getItems()
+        }
+        fetchItem()
+    }, [])
+
+    const statusVariantMap: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+        DISPONIVEL: "default",
+        LOCADO: "outline",
+        RESERVADO: "secondary",
+        DANIFICADO: "destructive",
+        PERDIDO: "destructive",
+    }
+
 
     return (
         <div className="space-y-6">
@@ -97,9 +73,9 @@ export default function FilmesPage() {
                             <TableHead>Poster</TableHead>
                             <TableHead>Título</TableHead>
                             <TableHead>Ano</TableHead>
-                            <TableHead>Gênero</TableHead>
-                            <TableHead>Duração</TableHead>
-                            <TableHead>Preço</TableHead>
+                            <TableHead>Categoria</TableHead>
+                            <TableHead>Classe</TableHead>
+                            <TableHead>N. Serie</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
@@ -109,22 +85,32 @@ export default function FilmesPage() {
                             <TableRow key={movie.id}>
                                 <TableCell>
                                     <div className="relative w-12 h-16 rounded overflow-hidden">
-                                        <Image src={movie.poster || "/placeholder.svg"} alt={movie.titulo} fill className="object-cover" />
+                                        {movie.titulo.imagem ? (
+                                            <Image
+                                                src={`data:image/jpeg;base64,${movie.titulo.imagem}`}
+                                                alt={movie.titulo.nome}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <Film className="w-12 h-12 text-gray-400" />
+                                        )}
                                     </div>
                                 </TableCell>
-                                <TableCell className="font-medium">{movie.titulo}</TableCell>
-                                <TableCell>{movie.ano}</TableCell>
-                                <TableCell>{movie.genero}</TableCell>
-                                <TableCell>{movie.duracao}</TableCell>
-                                <TableCell>{movie.precoLocacao}</TableCell>
+                                <TableCell className="font-medium">{movie.titulo.nome}</TableCell>
+                                <TableCell>{movie.titulo.ano}</TableCell>
+                                <TableCell>{movie.titulo.categoriaNome}</TableCell>
+                                <TableCell>{movie.titulo.classeNome}</TableCell>
+                                <TableCell>{movie.numeroSerie}</TableCell>
                                 <TableCell>
-                                    <Badge variant={movie.disponivel ? "default" : "secondary"}>
-                                        {movie.disponivel ? "Disponível" : "Indisponível"}
+                                    <Badge variant={movie.status ? statusVariantMap[movie.status] : "secondary"}>
+                                        {movie.status ?? "Sem status"}
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        <Button variant="ghost" size="icon">
+                                        <Button variant="ghost" size="icon"
+                                                onClick={() => router.push(`/admin/filmes/${movie.id}`)}>
                                             <Pencil className="h-4 w-4" />
                                         </Button>
                                         <Button variant="ghost" size="icon">

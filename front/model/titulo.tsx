@@ -5,9 +5,13 @@ export interface Titulo {
     id: number;
     ano: number;
     sinopse: string;
+    nome: string;
     imagem: string;
+    classeNome: string;
+    categoriaNome: string;
+    categroia: Categoria;
     classe: Classe;
-    categoria: Categoria;
+
 }
 export interface TituloCreate{
     id: number;

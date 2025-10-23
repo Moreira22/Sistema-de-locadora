@@ -24,5 +24,5 @@ export default function EditarUsuarioPage() {
         fetchUsuario();
     }, [id]);
 
-    return <NovoFilmePage isEdit={true} usuarioId={Number(id)} />;
+    return <NovoFilmePage isEdit={true} temId={Number(id)} />;
 }

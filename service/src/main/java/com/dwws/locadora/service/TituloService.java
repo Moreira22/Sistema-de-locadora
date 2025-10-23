@@ -45,7 +45,7 @@ public class TituloService {
         List<ItemDTO> savedItems = new ArrayList<>();
 
         for (ItemDTO itemDTO : dto.getItemList()) {
-            itemDTO.setTituloId(tituloDTO.getId());
+            itemDTO.getTitulo().setId(tituloDTO.getId());
             ItemDTO savedItem = itemService.save(itemDTO);
             savedItems.add(savedItem);
         }

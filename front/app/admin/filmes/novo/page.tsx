@@ -25,6 +25,7 @@ import {Diretor} from "@/model/diretor"
 import {Ator} from "@/model/ator"
 import {SelectClasse} from "@/components/select-classe"
 import {sucesso, erro, sucessoPut, sucessoDelete, erroDelete} from "@/lib/avisos"
+import {useItem} from "@/hooks/item";
 
 interface FilmesFormPageProps {
     isEdit?: boolean
@@ -78,6 +79,7 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
     const [idClasse, setIdClasse] = useState<number>(null);
     const [idDiretor, setIdDiretor] = useState<number>(null);
     const [idsAtores, setIdsAtores] = useState<number[]>([null]);
+    const {getItemById, item} = useItem();
     const { getCategorias, categorias, postCategoria, putCategoria, deleteCategoria } = useCategoria();
     const { getClasses , classes, postClasse, putClasse, deleteClasse} = useClasse();
     const { getDiretor, diretores, postDiretor, putDiretor, deleteDiretor}= useDiretor();
@@ -112,6 +114,32 @@ export default function NovoFilmePage({ isEdit = false, temId }: FilmesFormPageP
         }
         fetchDados()
     }, [])
+
+    // Carrega filme para edição
+    useEffect(() => {
+        if (!isEdit || !temId) return;
+
+        const fetchFilme = async () => {
+            const data = await getItemById(temId);
+            if (data) {
+                reset({
+                    titulo: {
+                        nome: data.titulo.nome,
+                        ano: data.titulo.ano,
+                        sinopse: data.titulo.sinopse,
+                        imagem: data.titulo.imagem,
+                    },
+                    itemList: {
+                        id: item.id,
+                        numeroSerie: item.numeroSerie || `DVD ${idx + 1}`,
+                        dataAquisicao: item.dataAquisicao || new Date().toISOString().slice(0, 10),
+                        status: item.status || "DISPONIVEL",
+                    }
+                });
+            }
+        };
+        fetchFilme();
+    }, [isEdit, temId, reset]);
 
 
     const onSubmit = async (data: FilmesFormData) => {

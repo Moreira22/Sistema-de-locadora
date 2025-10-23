@@ -16,6 +16,6 @@ public class TituloDTO implements Serializable{
     private String sinopse;
     private String nome;
     private byte[] imagem;
-    private Long classeId;
-    private Long categoriaId;
+    private ClasseDTO classe;
+    private CategoriaDTO categoria;
 }

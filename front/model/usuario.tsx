@@ -9,7 +9,7 @@ export interface Usuario{
     telefone: string;
     nome: string;
     perfilId: number;
-    perfilDesc: string;
+    descPerfil: string;
     ativo: boolean;
     endereco: Endereco;
 }

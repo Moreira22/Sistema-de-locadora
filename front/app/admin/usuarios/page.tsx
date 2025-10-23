@@ -15,7 +15,6 @@ export default function UsuariosPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
     const { getUsuarios, getUsuarioByNome, usuarios } = useUsuario();
-    // const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
     useEffect(() => {
         const fetchUsuarios = async () => {
@@ -29,6 +28,12 @@ export default function UsuariosPage() {
         user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
+
+    const statusVariantMap: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+        Funcionario: "default",
+        Administrador: "outline",
+        Cliente: "secondary",
+    }
 
     return (
         <div className="space-y-6">
@@ -64,7 +69,9 @@ export default function UsuariosPage() {
                             <TableHead>Nome</TableHead>
                             <TableHead>Telefone</TableHead>
                             <TableHead>Email</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Perfil</TableHead>
+                            <TableHead>UF</TableHead>
+                            <TableHead>Cidade</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -75,10 +82,12 @@ export default function UsuariosPage() {
                                 <TableCell>{user.telefone}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>
-                                    <Badge variant={user.ativo ? "default" : "secondary"}>
-                                        {user.ativo ? "Ativo" : "Inativo"}
+                                    <Badge variant={user.descPerfil ? statusVariantMap[user.descPerfil] : "secondary"}>
+                                        {user.descPerfil}
                                     </Badge>
                                 </TableCell>
+                                <TableCell>{user.endereco.uf}</TableCell>
+                                <TableCell>{user.endereco.cidade}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button variant="ghost" size="icon"
