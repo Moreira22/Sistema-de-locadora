@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,10 +25,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             " FROM Usuario u WHERE u.ativo = true")
     Page<UsuarioListDTO> listAll(Pageable pageable);
 
-
     @Query("SELECT u FROM Usuario u WHERE u.login = :login")
     Optional<Usuario> findByLogin(@Param("login") String login);
 
     @Query("SELECT u FROM Usuario u WHERE u.nome = :nome")
     Optional<Usuario> findByNome(@Param("nome") String nome);
+
+    @Query("SELECT u FROM Usuario u WHERE u.perfil.id = 3")
+    List<Usuario> listAllCliente();
 }

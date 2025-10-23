@@ -1,19 +1,19 @@
 package com.dwws.locadora.service.mapper;
 
 import com.dwws.locadora.domain.Locacao;
-import com.dwws.locadora.service.dto.LocacaoDTO;
+import com.dwws.locadora.service.dto.LocacaoListDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface LocacaoMapper extends EntityMapper<LocacaoDTO, Locacao> {
+public interface LocacaoMapper extends EntityMapper<LocacaoListDTO, Locacao> {
     @Override
-    @Mapping(source = "item.id", target = "itemId")
-    @Mapping(source = "usuario.id", target = "usuarioId")
-    LocacaoDTO toDto(Locacao locacao);
+    @Mapping(source = "item", target = "item")
+    @Mapping(source = "usuario", target = "usuario")
+    LocacaoListDTO toDto(Locacao locacao);
 
     @Override
     @InheritInverseConfiguration
-    Locacao toEntity(LocacaoDTO locacaoDTO);
+    Locacao toEntity(LocacaoListDTO locacaoDTO);
 }

@@ -2,7 +2,7 @@ package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Locacao;
 import com.dwws.locadora.repository.LocacaoRepository;
-import com.dwws.locadora.service.dto.LocacaoDTO;
+import com.dwws.locadora.service.dto.LocacaoListDTO;
 import com.dwws.locadora.service.mapper.LocacaoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,18 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class LocacaoService {
     private final LocacaoMapper mapper;
     private final LocacaoRepository repository;
+    private final ItemService itemService;
+    private final UsuarioService usuarioService;
 
     public Locacao findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public LocacaoDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public LocacaoListDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<LocacaoDTO> findAll(Pageable pageable) {
+    public Page<LocacaoListDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);
     }
 
-    public LocacaoDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public LocacaoListDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public LocacaoDTO save(LocacaoDTO dto){
+    public LocacaoListDTO save(LocacaoListDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 }

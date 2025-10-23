@@ -1,5 +1,4 @@
 package com.dwws.locadora.service.dto;
-
 import com.dwws.locadora.domain.enums.StatusLocacao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocacaoDTO implements Serializable{
+public class LocacaoListDTO implements Serializable{
     private Long id;
     private LocalDate dataLocaoa;
     private LocalDate dataPervista;
@@ -21,7 +20,6 @@ public class LocacaoDTO implements Serializable{
     private Float multa;
     private Double valor;
     private StatusLocacao status;
-    private Long idCliente;
-    private Long IdItem;
-    private Long idFuncionario;
+    private UsuarioDTO usuario;
+    private ItemListDTO item;
 }

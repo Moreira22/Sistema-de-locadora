@@ -75,6 +75,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> findByNome(@PathVariable("nome") String nome) {
         return new ResponseEntity<>(service.findByNome(nome), HttpStatus.OK);
     }
+    @GetMapping("/clientes")
+    public ResponseEntity<List<UsuarioDTO>> listAllCliente() {
+        return new ResponseEntity<>(service.listAllCliente(), HttpStatus.OK);
+    }
 
     @GetMapping("/funcionario")
     public ResponseEntity<Page<FuncionarioProjection>> findAllFincionario(Pageable pageable) {

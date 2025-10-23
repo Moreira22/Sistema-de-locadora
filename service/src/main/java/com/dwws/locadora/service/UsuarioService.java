@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -95,6 +97,20 @@ public class UsuarioService {
                 .map(mapper::toDto)
                 .orElseThrow( () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
     }
+
+    public List<UsuarioDTO> listAllCliente() {
+        List<Usuario> usuarios = repository.listAllCliente();
+
+        if (usuarios.isEmpty()) {
+            throw new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND);
+        }
+
+        return usuarios.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+
 
 
 }

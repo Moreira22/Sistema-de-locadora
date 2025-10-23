@@ -25,6 +25,9 @@ public class ItemService {
     public List<ItemListDTO> findAll() {
         return repository.findAllItens();
     }
+    public List<ItemListDTO> findAllDisponime() {
+        return repository.findAllItensDisponivel();
+    }
 
     public ItemDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
 

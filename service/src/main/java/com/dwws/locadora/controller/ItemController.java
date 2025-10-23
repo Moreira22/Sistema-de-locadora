@@ -33,6 +33,11 @@ public class ItemController {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/disponivel")
+    public ResponseEntity<List<ItemListDTO>> findAllDisponivel() {
+        return new ResponseEntity<>(service.findAllDisponime(), HttpStatus.OK);
+    }
+
     @GetMapping("/{idItem}")
     public ResponseEntity<ItemDTO> findByID(@PathVariable("idItem") Long idItem) {
         return new ResponseEntity<>(service.findByID(idItem), HttpStatus.OK);
