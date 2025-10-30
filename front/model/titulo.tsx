@@ -9,7 +9,7 @@ export interface Titulo {
     imagem: string;
     classeNome: string;
     categoriaNome: string;
-    categroia: Categoria;
+    categoria: Categoria;
     classe: Classe;
 
 }

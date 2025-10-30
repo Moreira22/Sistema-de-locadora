@@ -34,7 +34,7 @@ public class ItemController {
     }
 
     @GetMapping("/disponivel")
-    public ResponseEntity<List<ItemListDTO>> findAllDisponivel() {
+    public ResponseEntity<List<ItemDTO>> findAllDisponivel() {
         return new ResponseEntity<>(service.findAllDisponime(), HttpStatus.OK);
     }
 

@@ -25,7 +25,7 @@ public class ItemService {
     public List<ItemListDTO> findAll() {
         return repository.findAllItens();
     }
-    public List<ItemListDTO> findAllDisponime() {
+    public List<ItemDTO> findAllDisponime() {
         return repository.findAllItensDisponivel();
     }
 

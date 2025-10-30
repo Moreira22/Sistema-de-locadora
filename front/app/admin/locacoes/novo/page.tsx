@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -8,33 +8,33 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Film, User, Calendar, DollarSign } from "lucide-react"
-// Dados mockados
-const clientes = [
-    { id: "1", nome: "João Silva", email: "joao@email.com", telefone: "(11) 98765-4321", cpf: "123.456.789-00" },
-    { id: "2", nome: "Maria Santos", email: "maria@email.com", telefone: "(11) 91234-5678", cpf: "987.654.321-00" },
-    { id: "3", nome: "Pedro Oliveira", email: "pedro@email.com", telefone: "(11) 99999-8888", cpf: "456.789.123-00" },
-]
+import {useUsuario} from "@/hooks/usuario"
+import {useItem} from "@/hooks/item"
 
-const filmes = [
-    { id: "1", titulo: "Matrix", ano: 1999, genero: "Ficção Científica", valor: 15.0 },
-    { id: "2", titulo: "O Poderoso Chefão", ano: 1972, genero: "Drama", valor: 12.0 },
-    { id: "3", titulo: "Pulp Fiction", ano: 1994, genero: "Crime", valor: 10.0 },
-    { id: "4", titulo: "Interestelar", ano: 2014, genero: "Ficção Científica", valor: 18.0 },
-    { id: "5", titulo: "Clube da Luta", ano: 1999, genero: "Drama", valor: 13.0 },
-]
 export default function UsuariosPage() {
-    const [clienteSelecionado, setClienteSelecionado] = useState<string>("")
-    const [filmesSelecionados, setFilmesSelecionados] = useState<string[]>([])
-    const [dataPrevista, setDataPrevista] = useState<string>("")
-    const [dataDevolucao, setDataDevolucao] = useState<string>("")
+    const {getClientes, usuarios} = useUsuario();
+    const {getItemsDisponivel, itens} = useItem();
+    const [clienteSelecionado, setClienteSelecionado] = useState<number | null>(null)
+    const [filmesSelecionados, setFilmesSelecionados] = useState<number[]>([]);
+    const [dataPrevista, setDataPrevista] = useState<string>("");
+    const [dataDevolucao, setDataDevolucao] = useState<string>("");
 
-    const cliente = clientes.find((c) => c.id === clienteSelecionado)
+    // Carrega Dados
+    useEffect(() => {
+        const fetchDados = async () => {
+            await getClientes();
+            await getItemsDisponivel();
+        }
+        fetchDados()
+    }, [])
+
+    const cliente = usuarios.find((c) => c.id === clienteSelecionado)
     const valorTotal = filmesSelecionados.reduce((total, filmeId) => {
-        const filme = filmes.find((f) => f.id === filmeId)
-        return total + (filme?.valor || 0)
+        const filme = itens.find((f) => f.id === filmeId)
+        return total + (filme?.titulo.classe.valor || 0)
     }, 0)
 
-    const handleFilmeToggle = (filmeId: string) => {
+    const handleFilmeToggle = (filmeId: number) => {
         setFilmesSelecionados((prev) => (prev.includes(filmeId) ? prev.filter((id) => id !== filmeId) : [...prev, filmeId]))
     }
 
@@ -75,13 +75,16 @@ export default function UsuariosPage() {
                         <CardContent>
                             <div className="space-y-2">
                                 <Label htmlFor="cliente">Cliente</Label>
-                                <Select value={clienteSelecionado} onValueChange={setClienteSelecionado}>
+                                <Select
+                                    value={clienteSelecionado ? String(clienteSelecionado) : ""}
+                                    onValueChange={(value) => setClienteSelecionado(Number(value))}
+                                >
                                     <SelectTrigger id="cliente">
                                         <SelectValue placeholder="Selecione um cliente" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {clientes.map((cliente) => (
-                                            <SelectItem key={cliente.id} value={cliente.id}>
+                                        {usuarios.map((cliente) => (
+                                            <SelectItem key={cliente.id} value={String(cliente.id)}>
                                                 {cliente.nome}
                                             </SelectItem>
                                         ))}
@@ -172,7 +175,7 @@ export default function UsuariosPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
-                                {filmes.map((filme) => (
+                                {itens.map((filme) => (
                                     <div
                                         key={filme.id}
                                         className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
@@ -184,16 +187,16 @@ export default function UsuariosPage() {
                                         />
                                         <div className="flex-1 space-y-1">
                                             <Label htmlFor={`filme-${filme.id}`} className="text-base font-semibold cursor-pointer">
-                                                {filme.titulo}
+                                                {filme.titulo.nome}
                                             </Label>
                                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                                <span>{filme.ano}</span>
+                                                <span>{filme.titulo.ano}</span>
                                                 <span>•</span>
-                                                <span>{filme.genero}</span>
+                                                <span>{filme?.titulo?.categoria?.nome || "Sem categoria"}</span>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-lg font-bold text-primary">R$ {filme.valor.toFixed(2)}</p>
+                                            <p className="text-lg font-bold text-primary">R$ {filme.titulo.classe.valor.toFixed(2)}</p>
                                         </div>
                                     </div>
                                 ))}

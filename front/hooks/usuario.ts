@@ -1,3 +1,4 @@
+"use client"
 import {Usuario} from "@/model/usuario";
 import {Funcionario} from "@/model/funcionario";
 import Api from "@/server/server";
@@ -14,6 +15,16 @@ export const useUsuario = () => {
         try {
             const response = await Api.get('/usuarios');
             setUsuarios(response.data.content);
+            return response.data; // Isso deve ser um array
+        } catch (error) {
+            console.error(error);
+            return []; // Retorna um array vazio em caso de erro
+        }
+    };
+    const getClientes = async (): Promise<Usuario[]> => {
+        try {
+            const response = await Api.get('/usuarios/clientes');
+            setUsuarios(response.data);
             return response.data; // Isso deve ser um array
         } catch (error) {
             console.error(error);
@@ -89,5 +100,5 @@ export const useUsuario = () => {
         }
     };
 
-    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, usuarios, funcionarios, usuario};
+    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, getClientes, usuarios, funcionarios, usuario};
 };

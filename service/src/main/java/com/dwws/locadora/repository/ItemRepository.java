@@ -40,30 +40,37 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
     List<ItemListDTO> findAllItens();
 
     @Query("""
-    SELECT new com.dwws.locadora.service.dto.ItemListDTO(
+    SELECT new com.dwws.locadora.service.dto.ItemDTO(
         i.id,
         i.numeroSerie,
         i.dataAquisicao,
-        new com.dwws.locadora.service.dto.TituloListDTO(
+        i.status,
+        new com.dwws.locadora.service.dto.TituloDTO(
             t.id,
             t.ano,
             t.sinopse,
             t.nome,
             t.imagem,
-            c.id,
-            cat.id,
-            c.nome,
-            cat.nome
-        ),
-        i.status
+            new com.dwws.locadora.service.dto.ClasseDTO(
+                c.id,
+                c.nome,
+                c.valor,
+                c.prazoDevolucao
+            ),
+            new com.dwws.locadora.service.dto.CategoriaDTO(
+                cat.id,
+                cat.nome
+            )
+        )
     )
     FROM Item i
     JOIN i.titulo t
     JOIN t.classe c
     JOIN t.categoria cat
-    WHERE i.status = "DISPONIVEL"
+    WHERE i.status = 'DISPONIVEL'
     """)
-    List<ItemListDTO> findAllItensDisponivel();
+    List<ItemDTO> findAllItensDisponivel();
+
 
 
     List<Item> findAllByTitulo_Id(Long tituloId);

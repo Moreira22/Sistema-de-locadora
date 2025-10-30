@@ -19,6 +19,16 @@ export const useItem = () =>{
             return null;
         }
     };
+    const getItensDisponiovel = async (): Promise<Item[] | null> => {
+        try{
+            const respose = await Api.get('/item/disponivel');
+            setItens(respose.data);
+            return respose.data;
+        }catch (error){
+            console.error('GET', error);
+            return null;
+        }
+    };
     const getItemsDisponivel = async (): Promise<Item[] | null> => {
         try{
             const respose = await Api.get('/item/disponivel');
@@ -58,5 +68,5 @@ export const useItem = () =>{
         }
     };
 
-    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, itens, item};
+    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, getItensDisponiovel, itens, item};
 }
