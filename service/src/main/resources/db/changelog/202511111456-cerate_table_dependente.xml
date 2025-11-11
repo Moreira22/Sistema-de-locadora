@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+    <changeSet id="1762883876994-1" author="basis">
+        <createSequence incrementBy="1" sequenceName="seq_usuario" startValue="1"/>
+        <createTable tableName="dependente">
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_dependente"/>
+            </column>
+            <column name="socio_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="autorizado_alocar" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="socio_id" baseTableName="dependente"
+                                 constraintName="FK_DEPENDENTE_ON_SOCIO" referencedColumnNames="usuario_id"
+                                 referencedTableName="socio"/>
+        <addForeignKeyConstraint baseColumnNames="usuario_id" baseTableName="dependente"
+                                 constraintName="FK_DEPENDENTE_ON_USUARIO" referencedColumnNames="id"
+                                 referencedTableName="usuario"/>
+    </changeSet>
+</databaseChangeLog>

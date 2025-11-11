@@ -1,15 +1,18 @@
 package com.dwws.locadora.controller;
 
-import com.dwws.locadora.repository.PerfilRepository;
 import com.dwws.locadora.service.PerfilService;
 import com.dwws.locadora.service.UsuarioService;
+import com.dwws.locadora.service.dto.CreateDependenteDTO;
 import com.dwws.locadora.service.dto.CreateUsuarioDTO;
+import com.dwws.locadora.service.dto.DependenteDTO;
 import com.dwws.locadora.service.dto.DropdownDTO;
 import com.dwws.locadora.service.dto.FuncionarioDTO;
 import com.dwws.locadora.service.dto.FuncionarioProjection;
+import com.dwws.locadora.service.dto.SocioDTO;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
 import com.dwws.locadora.service.dto.UsuarioDTO;
 import com.dwws.locadora.service.dto.UsuarioListDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,12 +28,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.List;
 
 @RestController
 @RequestMapping("api/usuarios")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
+@Tag(name = "Usuario", description = "Controlador para salvar, lsiat e editar dados do usuarios")
 public class UsuarioController {
     private final UsuarioService service;
     private final PerfilService  perfilService;
@@ -49,10 +54,10 @@ public class UsuarioController {
         return new ResponseEntity<>(service.findByID(idUsuario), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<UsuarioDTO> save(@RequestBody CreateUsuarioDTO dto) {
-        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<UsuarioDTO> save(@RequestBody CreateUsuarioDTO dto) {
+//        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> delete(@PathVariable("idUsuario") Long idUsuario) {
@@ -76,8 +81,23 @@ public class UsuarioController {
         return new ResponseEntity<>(service.findByNome(nome), HttpStatus.OK);
     }
     @GetMapping("/clientes")
-    public ResponseEntity<List<UsuarioDTO>> listAllCliente() {
-        return new ResponseEntity<>(service.listAllCliente(), HttpStatus.OK);
+    public ResponseEntity<List<SocioDTO>> listAllCliente() {
+        return new ResponseEntity<>(service.listAllSocio(), HttpStatus.OK);
+    }
+
+    @GetMapping("/dependente")
+    public ResponseEntity<List<DependenteDTO>> listAllDependentes() {
+        return new ResponseEntity<>(service.listAllDependentes(), HttpStatus.OK);
+    }
+
+    @PostMapping("/socio")
+    public ResponseEntity<SocioDTO> saveSocio(@RequestBody CreateUsuarioDTO dto) {
+        return new ResponseEntity<>(service.saveSocio(dto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/dependente")
+    public ResponseEntity<DependenteDTO> saveDependentes(@RequestBody CreateDependenteDTO dto) {
+        return new ResponseEntity<>(service.saveDependentes(dto), HttpStatus.CREATED);
     }
 
     @GetMapping("/funcionario")

@@ -1,0 +1,15 @@
+package com.dwws.locadora.service.dto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class DependenteDTO extends UsuarioListDTO implements Serializable{
+    private Boolean autorizadoAlocar;
+    private String senha;
+    private Long idSocio;
+}
