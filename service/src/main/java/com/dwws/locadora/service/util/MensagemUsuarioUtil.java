@@ -16,4 +16,6 @@ public class MensagemUsuarioUtil {
 
     public static final String NULL_PASSWORD = "Senha Não Pode Ser Nulo";
     public static final String EMPTY_PASSWORD = "Senha Não Pode Ser Vazio";
+
+    public static final String  MAXIMO_3_DEPENDENTE = "Cada sócio pode ter no máximo 3 dependentes.";
 }

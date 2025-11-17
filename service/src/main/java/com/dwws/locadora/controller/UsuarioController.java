@@ -49,16 +49,6 @@ public class UsuarioController {
         return new ResponseEntity<>(perfilService.fillProfileDropdown(), HttpStatus.OK);
     }
 
-    @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> findByID(@PathVariable("idUsuario") Long idUsuario) {
-        return new ResponseEntity<>(service.findByID(idUsuario), HttpStatus.OK);
-    }
-
-//    @PostMapping
-//    public ResponseEntity<UsuarioDTO> save(@RequestBody CreateUsuarioDTO dto) {
-//        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
-//    }
-
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> delete(@PathVariable("idUsuario") Long idUsuario) {
         service.delete(idUsuario);
@@ -85,9 +75,9 @@ public class UsuarioController {
         return new ResponseEntity<>(service.listAllSocio(), HttpStatus.OK);
     }
 
-    @GetMapping("/dependente")
-    public ResponseEntity<List<DependenteDTO>> listAllDependentes() {
-        return new ResponseEntity<>(service.listAllDependentes(), HttpStatus.OK);
+    @GetMapping("/dependente/{socioId}")
+    public ResponseEntity<List<DependenteDTO>> listAllDependentes(@PathVariable("socioId") Long socioId) {
+        return new ResponseEntity<>(service.listAllDependentes(socioId), HttpStatus.OK);
     }
 
     @PostMapping("/socio")

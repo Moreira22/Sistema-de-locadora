@@ -11,4 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface DependenteRepository extends JpaRepository<Dependente, Long>{
+    List<Dependente> findAllBySocioId(Long socioId);
 }

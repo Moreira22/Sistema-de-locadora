@@ -69,8 +69,7 @@ public class UsuarioService {
     public UsuarioDTO findByID(Long id) {
         return mapper.toDto(findEntity(id));
     }
-    public SocioDTO findByIDSocio(Long id) {return socioMapper.toDto(findEntitySocio(id));
-    }
+    public SocioDTO findByIDSocio(Long id) {return socioMapper.toDto(findEntitySocio(id));}
 
     public Usuario save(CreateUsuarioDTO dto) {
 
@@ -118,25 +117,13 @@ public class UsuarioService {
                 .orElseThrow( () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
     }
 
-    public List<UsuarioDTO> listAllCliente() {
-        List<Usuario> usuarios = repository.listAllCliente();
-
-        if (usuarios.isEmpty()) {
-            throw new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND);
-        }
-
-        return usuarios.stream()
-                .map(mapper::toDto)
-                .toList();
-    }
-
     public List<SocioDTO> listAllSocio() {
         return  socioRepository.findAll().stream()
                 .map(socioMapper::toDto).toList();
     }
 
-    public List<DependenteDTO> listAllDependentes() {
-        return  dependenteRepository.findAll().stream()
+    public List<DependenteDTO> listAllDependentes(Long socioId) {
+        return  dependenteRepository.findAllBySocioId(socioId).stream()
                 .map(dependenteMapper::toDto).toList();
     }
 
@@ -154,35 +141,40 @@ public class UsuarioService {
         return socioMapper.toDto(socioSalvo);
     }
 
+    @Transactional
     public DependenteDTO saveDependentes(CreateDependenteDTO dto) {
-        // Cria o usuário base
+
         CreateUsuarioDTO createUser = new CreateUsuarioDTO();
         createUser.setUsuario(dto.getUsuario());
         createUser.setEndereco(dto.getEndereco());
 
         Usuario usuarioSalvo = save(createUser);
 
-        // Cria o dependente a partir do usuário
         Dependente dependente = new Dependente(usuarioSalvo);
         dependente.setId(null);
 
-        // Define se é autorizado
         dependente.setAutorizadoAlocar(dto.getAutorizadoAlocar() != null ? dto.getAutorizadoAlocar() : true);
 
-        // Define o sócio responsável
+
         Socio socio = findEntitySocio(dto.getIdSocio());
+        validarDependenteParaSocio(socio);
         dependente.setSocio(socio);
 
-        // Adiciona o dependente à lista do sócio (mantém relação bidirecional)
         if (socio.getDependentes() == null) {
             socio.setDependentes(new ArrayList<>());
         }
         socio.getDependentes().add(dependente);
 
-        // Salva o dependente (JPA vai sincronizar as relações)
         Dependente dependenteSalvo = dependenteRepository.save(dependente);
+        socioRepository.save(socio);
 
         return dependenteMapper.toDto(dependenteSalvo);
+    }
+
+    private void validarDependenteParaSocio(Socio socio) {
+        if (socio.getDependentes() != null && socio.getDependentes().size() >= 3) {
+            throw new IllegalStateException(MensagemUsuarioUtil.MAXIMO_3_DEPENDENTE);
+        }
     }
 
 
