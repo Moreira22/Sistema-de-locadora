@@ -13,3 +13,18 @@ export interface Usuario{
     ativo: boolean;
     endereco: Endereco;
 }
+
+export interface Socio{
+    id: number;
+    login: string;
+    senha: string;
+    cpf: string;
+    email:string;
+    telefone: string;
+    nome: string;
+    perfilId: number;
+    descPerfil: string;
+    ativo: boolean;
+    endereco: Endereco;
+    dependentes: Usuario[];
+}

@@ -3,37 +3,39 @@
 import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Search, Plus, Pencil, Trash2 } from "lucide-react"
+
+import { Search, Plus, Pencil, Trash2, UserPlus } from "lucide-react"
 import Link from "next/link"
 import {useUsuario} from "@/hooks/usuario";
-import {Usuario} from "@/model/usuario";
+
 import {useRouter} from "next/navigation";
+import {TableClientes} from "@/components/tableClientes"
 
 export default function UsuariosPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
-    const { getUsuarios, getUsuarioByNome, usuarios } = useUsuario();
+    const { getClientes, socios } = useUsuario();
 
     useEffect(() => {
         const fetchUsuarios = async () => {
-            await getUsuarios()
-            console.log("Usuarios API:", usuarios) // verifique estrutura
+            await getClientes()
         }
         fetchUsuarios()
     }, []);
 
-    const filteredUsers = usuarios.filter(user =>
+    const filteredUsers = socios.filter(user =>
         user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-    const statusVariantMap: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-        Funcionario: "default",
-        Administrador: "outline",
-        Cliente: "secondary",
-    }
+    const columns = [
+        { label: "Nome", key: "nome", className: "font-medium" },
+        { label: "Telefone", key: "telefone" },
+        { label: "Email", key: "email" },
+        { label: "CPF", key: "cpf" },
+        { label: "UF", key: "endereco.uf" },
+        { label: "Cidade", key: "endereco.cidade" },
+    ];
 
     return (
         <div className="space-y-6">
@@ -62,56 +64,61 @@ export default function UsuariosPage() {
                 </div>
             </div>
 
-            <div className="border rounded-lg bg-card">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nome</TableHead>
-                            <TableHead>Telefone</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Perfil</TableHead>
-                            <TableHead>UF</TableHead>
-                            <TableHead>Cidade</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {Array.isArray(filteredUsers) && filteredUsers.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell className="font-medium">{user.nome}</TableCell>
-                                <TableCell>{user.telefone}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <Badge variant={user.descPerfil ? statusVariantMap[user.descPerfil] : "secondary"}>
-                                        {user.descPerfil}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>{user.endereco.uf}</TableCell>
-                                <TableCell>{user.endereco.cidade}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <Button variant="ghost" size="icon"
+            <TableClientes
+                columns={columns}
+                data={filteredUsers}
+                actions={(user) => (
+                    <>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => router.push(`/admin/usuarios/${user.id}`)}
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </Button>
+
+                        <Button variant="ghost" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                            <UserPlus className="h-4 w-4" />
+                        </Button>
+                    </>
+                )}
+                renderDependentes={(user) => (
+                    user.dependentes?.length > 0 ? (
+                        <div className="p-3">
+                            <h3 className="font-semibold text-lg mb-2">Dependentes</h3>
+
+                            <div className="space-y-2">
+                                {user.dependentes.map((dep, i) => (
+                                    <div key={i} className="border p-2 rounded-md bg-white">
+                                        <div className="flex items-center gap-4">
+                                            <span><strong>Nome:</strong> {dep.nome}</span>
+                                            <span><strong>CPF:</strong> {dep.cpf}</span>
+                                            <span><strong>Email:</strong> {dep.email}</span>
+
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
                                                 onClick={() => router.push(`/admin/usuarios/${user.id}`)}
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon">
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                                className="ml-auto"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {filteredUsers.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                                    Nenhum usuário encontrado
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground p-3">
+                            Nenhum dependente encontrado.
+                        </p>
+                    )
+                )}
+            />
         </div>
     );
 }

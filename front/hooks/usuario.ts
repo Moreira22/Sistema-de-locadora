@@ -1,5 +1,5 @@
 "use client"
-import {Usuario} from "@/model/usuario";
+import {Usuario, Socio} from "@/model/usuario";
 import {Funcionario} from "@/model/funcionario";
 import Api from "@/server/server";
 import {Perfil} from "@/model/perfil";
@@ -7,6 +7,7 @@ import {useState} from "react";
 export const useUsuario = () => {
     // List
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const [socios, setSocios] = useState<Socio[]>([]);
     const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
     // By id / nome
     const [usuario, setUsuario] = useState<Usuario | Funcionario| null>();
@@ -24,7 +25,7 @@ export const useUsuario = () => {
     const getClientes = async (): Promise<Usuario[]> => {
         try {
             const response = await Api.get('/usuarios/clientes');
-            setUsuarios(response.data);
+            setSocios(response.data);
             return response.data; // Isso deve ser um array
         } catch (error) {
             console.error(error);
@@ -100,5 +101,5 @@ export const useUsuario = () => {
         }
     };
 
-    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, getClientes, usuarios, funcionarios, usuario};
+    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, getClientes, usuarios, funcionarios, usuario, socios};
 };
