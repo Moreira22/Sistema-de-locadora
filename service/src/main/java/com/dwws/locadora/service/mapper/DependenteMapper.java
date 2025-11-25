@@ -4,7 +4,6 @@ import com.dwws.locadora.domain.Endereco;
 import com.dwws.locadora.domain.Perfil;
 import com.dwws.locadora.domain.Socio;
 import com.dwws.locadora.service.dto.DependenteDTO;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

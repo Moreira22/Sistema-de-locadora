@@ -61,6 +61,10 @@ public class UsuarioService {
         return socioRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
     }
+    public Dependente findEntityDependente(Long id) {
+        return dependenteRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
+    }
 
     public Page<UsuarioListDTO> findAll(Pageable pageable) {
         return repository.listAll(pageable);
@@ -70,6 +74,7 @@ public class UsuarioService {
         return mapper.toDto(findEntity(id));
     }
     public SocioDTO findByIDSocio(Long id) {return socioMapper.toDto(findEntitySocio(id));}
+    public DependenteDTO findByIDDependente(Long id) {return dependenteMapper.toDto(findEntityDependente(id));}
 
     public Usuario save(CreateUsuarioDTO dto) {
 
@@ -115,6 +120,11 @@ public class UsuarioService {
         return repository.findByNome(nome)
                 .map(mapper::toDto)
                 .orElseThrow( () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
+    }
+
+    public List<UsuarioDTO> listAllUsuario(){
+        return repository.findAll().stream()
+                .map(mapper::toDto).toList();
     }
 
     public List<SocioDTO> listAllSocio() {

@@ -1,7 +1,9 @@
 package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Locacao;
+import com.dwws.locadora.domain.enums.TipoUsuario;
 import com.dwws.locadora.repository.LocacaoRepository;
+import com.dwws.locadora.service.dto.DependenteDTO;
 import com.dwws.locadora.service.dto.LocacaoListDTO;
 import com.dwws.locadora.service.mapper.LocacaoMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,25 @@ public class LocacaoService {
 
     public LocacaoListDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public LocacaoListDTO save(LocacaoListDTO dto){
+    private LocacaoListDTO save(LocacaoListDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
+
+    public LocacaoListDTO locacaoItem(LocacaoListDTO dto) {
+        TipoUsuario tipo = TipoUsuario.fromCodigo(dto.getUsuario().getIdPerfil().intValue());
+
+        if (tipo == TipoUsuario.DEPENDENTE) {
+            validarDependente(dto.getUsuario().getId());
+        }
+        return save(dto);
+    }
+
+    private void validarDependente(Long idUsuario) {
+        DependenteDTO dependente = usuarioService.findByIDDependente(idUsuario);
+
+        if (!Boolean.TRUE.equals(dependente.getAutorizadoAlocar())) {
+            throw new RuntimeException("Usuário dependente não está autorizado a alocar filmes.");
+        }
+    }
+
 }

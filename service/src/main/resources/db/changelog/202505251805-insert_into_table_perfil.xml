@@ -22,5 +22,10 @@
             <column name="descricao" value="Cliente"/>
             <column name="ativo" valueBoolean="true"/>
         </insert>
+        <insert tableName="perfil" schemaName="">
+            <column name="id" valueSequenceNext="seq_perfil"/>
+            <column name="descricao" value="Dependente"/>
+            <column name="ativo" valueBoolean="true"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
