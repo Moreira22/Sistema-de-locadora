@@ -44,10 +44,10 @@ spring:
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-      hibernate.default_schema: locadoranew # <<<--- SCHEMA DEFINIDO AQUI
+      hibernate.default_schema: locadora # <<<--- SCHEMA DEFINIDO AQUI
   liquibase:
     change-log: classpath:/db/master.xml
-    default-schema: locadoranew # <<<--- SCHEMA PARA MIGRATIONS
+    default-schema: locadora # <<<--- SCHEMA PARA MIGRATIONS
   # enabled: false   # <<<--- desativa o Liquibase temporariamente
   #       drop-first: true
   server:

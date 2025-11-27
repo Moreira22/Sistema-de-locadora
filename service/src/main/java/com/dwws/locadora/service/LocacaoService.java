@@ -31,8 +31,9 @@ public class LocacaoService {
 
     public LocacaoListDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<LocacaoListDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<LocacaoListDTO> findAll(){
+        return repository.findAllByAtivoTrue().stream()
+                .map(mapper::toDto).toList();
     }
 
     public LocacaoListDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }

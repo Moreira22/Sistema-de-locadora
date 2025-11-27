@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/locacao")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -21,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LocacaoController {
     private final LocacaoService service;
     @GetMapping
-    public ResponseEntity<Page<LocacaoListDTO>> findAll(Pageable pageable) {
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<List<LocacaoListDTO>> findAll() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idLocacao}")

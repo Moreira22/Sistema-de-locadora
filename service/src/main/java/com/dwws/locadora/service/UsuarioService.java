@@ -2,10 +2,12 @@ package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Dependente;
 import com.dwws.locadora.domain.Funcionario;
+import com.dwws.locadora.domain.Perfil;
 import com.dwws.locadora.domain.Socio;
 import com.dwws.locadora.domain.Usuario;
 import com.dwws.locadora.repository.DependenteRepository;
 import com.dwws.locadora.repository.FuncionarioRepository;
+import com.dwws.locadora.repository.PerfilRepository;
 import com.dwws.locadora.repository.SocioRepository;
 import com.dwws.locadora.repository.UsuarioRepository;
 import com.dwws.locadora.service.dto.CreateDependenteDTO;
@@ -48,6 +50,7 @@ public class UsuarioService {
     private final SocioMapper socioMapper;
     private final DependenteRepository dependenteRepository;
     private final DependenteMapper dependenteMapper;
+    private final PerfilService perfilService;
 
     public Usuario findEntity(Long id) {
         return repository.findById(id).orElseThrow(
@@ -81,6 +84,7 @@ public class UsuarioService {
         if (dto.getUsuario().getId() == null) {
             dto.getUsuario().setSenha(passwordEncoder.encode(dto.getUsuario().getSenha()));
         }
+        dto.getUsuario().setIdPerfil(Long.valueOf(2));
         EnderecoDTO enderecoDTO = enderecoService.save(dto.getEndereco());
         dto.getUsuario().setIdEndereco(enderecoDTO.getId());
         return repository.save(mapper.toEntity(dto.getUsuario()));
@@ -105,6 +109,7 @@ public class UsuarioService {
     }
 
     public FuncionarioDTO saveFuncionario(FuncionarioDTO dto){
+        dto.setIdPerfil(Long.valueOf(1));
         return funcionarioMapper.toDto(funcionarioRepository.save(funcionarioMapper.toEntity(dto)));
     }
 
@@ -145,6 +150,8 @@ public class UsuarioService {
 
         socio.setDependentes(new ArrayList<>());
         socio.setId(null);
+        Perfil perfilSocio = perfilService.findEntity(Long.valueOf(3));
+        socio.setPerfil(perfilSocio);
 
         Socio socioSalvo = socioRepository.save(socio);
 
@@ -169,6 +176,8 @@ public class UsuarioService {
         Socio socio = findEntitySocio(dto.getIdSocio());
         validarDependenteParaSocio(socio);
         dependente.setSocio(socio);
+        Perfil perfilDependente = perfilService.findEntity(Long.valueOf(4));
+        dependente.setPerfil(perfilDependente);
 
         if (socio.getDependentes() == null) {
             socio.setDependentes(new ArrayList<>());

@@ -25,4 +25,5 @@
     <include file="db/changelog/202509231612-create_table_tituloDiretor.xml"/>
     <include file="db/changelog/202511111456-cerate_table_socio.xml"/>
     <include file="db/changelog/202511111456-cerate_table_dependente.xml"/>
+    <include file="db/changelog/202511261739-update_table_locacao.xml"/>
 </databaseChangeLog>
