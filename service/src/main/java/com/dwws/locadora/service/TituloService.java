@@ -1,6 +1,7 @@
 package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Titulo;
+import com.dwws.locadora.domain.enums.StatusItem;
 import com.dwws.locadora.repository.TituloAtorRepository;
 import com.dwws.locadora.repository.TituloRepository;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
@@ -46,6 +47,7 @@ public class TituloService {
 
         for (ItemDTO itemDTO : dto.getItemList()) {
             itemDTO.getTitulo().setId(tituloDTO.getId());
+            itemDTO.setStatus(StatusItem.DISPONIVEL);
             ItemDTO savedItem = itemService.save(itemDTO);
             savedItems.add(savedItem);
         }

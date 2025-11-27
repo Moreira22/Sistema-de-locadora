@@ -34,4 +34,9 @@ public class LocacaoController {
     public ResponseEntity<LocacaoListDTO> save(@RequestBody LocacaoListDTO dto) {
         return new ResponseEntity<>(service.locacaoItem(dto), HttpStatus.CREATED);
     }
+
+    @PostMapping("/{idLocacao}")
+    public ResponseEntity<LocacaoListDTO> save(@PathVariable("idLocacao") Long idLocacao) {
+        return new ResponseEntity<>(service.devolucaoItem(idLocacao), HttpStatus.CREATED);
+    }
 }

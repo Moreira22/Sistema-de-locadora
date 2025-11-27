@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +21,7 @@ public class LocacaoListDTO implements Serializable{
     private Float multa;
     private Double valor;
     private StatusLocacao status;
+    private Boolean ativo;
     private UsuarioDTO usuario;
-    private ItemListDTO item;
+    private ItemDTO item;
 }

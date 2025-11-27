@@ -1,9 +1,12 @@
 package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Locacao;
+import com.dwws.locadora.domain.enums.StatusItem;
 import com.dwws.locadora.domain.enums.TipoUsuario;
 import com.dwws.locadora.repository.LocacaoRepository;
 import com.dwws.locadora.service.dto.DependenteDTO;
+import com.dwws.locadora.service.dto.ItemDTO;
+import com.dwws.locadora.service.dto.ItemListDTO;
 import com.dwws.locadora.service.dto.LocacaoListDTO;
 import com.dwws.locadora.service.mapper.LocacaoMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +47,10 @@ public class LocacaoService {
         if (tipo == TipoUsuario.DEPENDENTE) {
             validarDependente(dto.getUsuario().getId());
         }
+
+        dto.setAtivo(true);
+        atualizarStatusItens(dto.getItem(), StatusItem.LOCADO);
+
         return save(dto);
     }
 
@@ -51,5 +61,36 @@ public class LocacaoService {
             throw new RuntimeException("Usuário dependente não está autorizado a alocar filmes.");
         }
     }
+
+    private void atualizarStatusItens(ItemDTO item, StatusItem novoStatus) {
+        if (item == null) return;
+
+        item.setStatus(novoStatus);
+        itemService.save(item);
+
+    }
+
+    public LocacaoListDTO devolucaoItem(Long idLocacao) {
+        LocacaoListDTO locacao = fingByID(idLocacao);
+
+        if (locacao == null) {
+            throw new RuntimeException("Locação não encontrada.");
+        }
+
+
+        if (!Boolean.TRUE.equals(locacao.getAtivo())) {
+            throw new RuntimeException("Esta locação já foi finalizada.");
+        }
+
+        locacao.setAtivo(false);
+
+        atualizarStatusItens(locacao.getItem(), StatusItem.DISPONIVEL);
+
+
+         locacao.setDataDevolucao(LocalDate.now());
+
+        return save(locacao);
+    }
+
 
 }

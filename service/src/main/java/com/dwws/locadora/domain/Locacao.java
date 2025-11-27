@@ -61,4 +61,7 @@ public class Locacao implements Serializable {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo;
+
 }
