@@ -4,6 +4,7 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import { ClientSidebar } from "@/components/client-sidebar"
 import {useEffect, useState} from "react";
 import {FuncionarioSidebar} from "@/components/fincionario-sidebar";
+import {Topbar} from "@/components/topBar";
 
 export default function AdminLayout({children,}: { children: React.ReactNode }) {
     const [perfilId, setPerfilId] = useState<number | null>(null);
@@ -34,8 +35,14 @@ export default function AdminLayout({children,}: { children: React.ReactNode }) 
         <div className="min-h-screen bg-background">
             <div className="flex">
                 <Sidebar />
-                <main className="flex-1 p-8">{children}</main>
+                <main className="flex-1">
+                    <Topbar />
+
+                    <div className="p-8">
+                        {children}
+                    </div>
+                </main>
             </div>
         </div>
-    )
+    );
 }

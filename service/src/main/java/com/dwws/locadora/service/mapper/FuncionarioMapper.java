@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface FuncionarioMapper {
 
     @Mapping(source = "perfil.id", target = "idPerfil")
-    @Mapping(source = "endereco.id", target = "idEndereco")
+    @Mapping(source = "endereco", target = "endereco")
     FuncionarioDTO toDto(Funcionario funcionario);
 
 

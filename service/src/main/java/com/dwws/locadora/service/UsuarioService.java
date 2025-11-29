@@ -86,7 +86,7 @@ public class UsuarioService {
         }
         dto.getUsuario().setIdPerfil(Long.valueOf(2));
         EnderecoDTO enderecoDTO = enderecoService.save(dto.getEndereco());
-        dto.getUsuario().setIdEndereco(enderecoDTO.getId());
+        dto.getUsuario().setEndereco(enderecoDTO);
         return repository.save(mapper.toEntity(dto.getUsuario()));
     }
 

@@ -38,6 +38,6 @@ public class UsuarioDTO implements Serializable {
     @NotNull(message = MensagemUsuarioUtil.NULL_PROFILE)
     private Long idPerfil;
 
-    private Long idEndereco;
+    private EnderecoDTO endereco;
 
 }

@@ -1,43 +1,57 @@
 "use client"
 
-import { useState } from "react"
-import { Film, LogIn, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {useRouter} from "next/navigation";
-import {Auth} from "@/model/auth";
-import {useAuth} from "@/hooks/auth";
+import { useEffect, useState } from "react"
+import { Film, LogIn, LogOut } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
+import { Auth } from "@/model/auth"
+import { useAuth } from "@/hooks/auth"
 
 export function MovieHeader() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const router = useRouter();
-    const {postAuthUser} = useAuth();
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const router = useRouter()
+    const { postAuthUser } = useAuth()
 
+    // 🔥 Verifica login no carregamento
+    useEffect(() => {
+        const user = localStorage.getItem("user")
+        if (user) {
+            setIsLoggedIn(true)
+        }
+    }, [])
+
+    // 🔥 Login
     const handleLogin = async () => {
         try {
-            const userAuth: Auth = {
-                username: username,
-                password: password,
-            };
-
-            const data = await postAuthUser(userAuth);
+            const userAuth: Auth = { username, password }
+            const data = await postAuthUser(userAuth)
 
             if (data && data.usuario) {
-                setIsLoggedIn(true);
-                setShowModal(false);
-                router.push("/admin");
+                // salva no localStorage
+                localStorage.setItem("user", JSON.stringify(data.usuario))
+
+                setIsLoggedIn(true)
+                setShowModal(false)
+                router.push("/admin")
             } else {
-                // Se login falhou
-                alert("Usuário ou senha inválidos!");
+                alert("Usuário ou senha inválidos!")
             }
         } catch (error) {
-            console.error("Erro ao autenticar:", error);
-            alert("Ocorreu um erro ao tentar fazer login.");
+            console.error("Erro ao autenticar:", error)
+            alert("Ocorreu um erro ao tentar fazer login.")
         }
-    };
+    }
+
+    // 🔥 Logout limpando localStorage
+    const handleLogout = () => {
+        localStorage.removeItem("user")
+        setIsLoggedIn(false)
+        router.push("/")
+    }
 
     return (
         <>
@@ -45,18 +59,18 @@ export function MovieHeader() {
                 <div className="container mx-auto flex h-16 items-center justify-between px-4">
                     <div className="flex items-center gap-2">
                         <Film className="h-8 w-8 text-primary" />
-                        <h1 className="text-2xl font-bold text-balance">LocaCine</h1>
+                        <h1 className="text-2xl font-bold">LocaCine</h1>
                     </div>
 
                     <div className="flex items-center gap-3">
                         {isLoggedIn ? (
                             <Button
                                 variant="outline"
-                                onClick={() => setIsLoggedIn(false)}
+                                onClick={() => router.push("/admin")}
                                 className="gap-2"
                             >
                                 <LogOut className="h-4 w-4" />
-                                Sair
+                                Painel do Usuário
                             </Button>
                         ) : (
                             <Button
@@ -71,11 +85,12 @@ export function MovieHeader() {
                 </div>
             </header>
 
-            {/* Modal */}
+            {/* Modal de Login */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                     <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
                         <h2 className="mb-4 text-lg font-bold">Login</h2>
+
                         <Input
                             placeholder="Usuário"
                             value={username}
@@ -89,6 +104,7 @@ export function MovieHeader() {
                             onChange={(e) => setPassword(e.target.value)}
                             className="mb-4"
                         />
+
                         <div className="flex justify-end gap-2">
                             <Button variant="outline" onClick={() => setShowModal(false)}>
                                 Cancelar
@@ -99,5 +115,5 @@ export function MovieHeader() {
                 </div>
             )}
         </>
-    );
+    )
 }

@@ -48,6 +48,10 @@ public class UsuarioController {
     public ResponseEntity<List<DropdownDTO>> fillProfileDropdown() {
         return new ResponseEntity<>(perfilService.fillProfileDropdown(), HttpStatus.OK);
     }
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<UsuarioDTO> findByLogin(@PathVariable("idUsuario") Long idUsuario) {
+        return new ResponseEntity<>(service.findByID(idUsuario), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> delete(@PathVariable("idUsuario") Long idUsuario) {

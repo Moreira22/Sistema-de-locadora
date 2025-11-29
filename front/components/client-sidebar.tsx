@@ -6,11 +6,6 @@ import { Film, Users, Home, LayoutDashboard } from "lucide-react"
 
 const menuItems = [
     {
-        title: "Início",
-        href: "/",
-        icon: Home,
-    },
-    {
         title: "Minha Lista",
         href: "/admin/filmes",
         icon: LayoutDashboard,
