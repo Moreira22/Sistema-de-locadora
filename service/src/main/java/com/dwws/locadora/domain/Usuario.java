@@ -1,5 +1,6 @@
 package com.dwws.locadora.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -67,6 +70,9 @@ public class Usuario implements Serializable, UserDetails {
     @OneToOne
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
+
+    @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dependente> dependentes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

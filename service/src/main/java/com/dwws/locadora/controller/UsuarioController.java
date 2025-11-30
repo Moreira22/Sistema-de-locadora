@@ -2,19 +2,12 @@ package com.dwws.locadora.controller;
 
 import com.dwws.locadora.service.PerfilService;
 import com.dwws.locadora.service.UsuarioService;
-import com.dwws.locadora.service.dto.CreateDependenteDTO;
-import com.dwws.locadora.service.dto.CreateUsuarioDTO;
 import com.dwws.locadora.service.dto.DependenteDTO;
 import com.dwws.locadora.service.dto.DropdownDTO;
-import com.dwws.locadora.service.dto.FuncionarioDTO;
-import com.dwws.locadora.service.dto.FuncionarioProjection;
-import com.dwws.locadora.service.dto.SocioDTO;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
 import com.dwws.locadora.service.dto.UsuarioDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,9 +32,14 @@ public class UsuarioController {
     private final UsuarioService service;
     private final PerfilService  perfilService;
 
+    //GET SIMPLE
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> findAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    }
+    @GetMapping("/dependentes")
+    public ResponseEntity<List<DependenteDTO>> findAllDependentes() {
+        return new ResponseEntity<>(service.findAllDependentes(), HttpStatus.OK);
     }
     @GetMapping("/perfil")
     public ResponseEntity<List<DropdownDTO>> fillProfileDropdown() {
@@ -52,18 +50,31 @@ public class UsuarioController {
         return new ResponseEntity<>(service.findByID(idUsuario), HttpStatus.OK);
     }
 
+    // POST
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> save(@RequestBody UsuarioDTO dto) {
+        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
+    }
+    @PostMapping("/dependente")
+    public ResponseEntity<DependenteDTO> save(@RequestBody DependenteDTO dto) {
+        return new ResponseEntity<>(service.saveDependente(dto), HttpStatus.CREATED);
+    }
+
+    //DELETE
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Void> delete(@PathVariable("idUsuario") Long idUsuario) {
         service.delete(idUsuario);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //PUT
     @PutMapping("/updtSenha")
     public ResponseEntity<Void> updtSenha(@RequestBody UserPasswordChangeDTO userPasswordChangeDTO) {
         service.updtPassword(userPasswordChangeDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // PUTROS GET
     @GetMapping("/login/{login}")
     public ResponseEntity<UsuarioDTO> findByLogin(@PathVariable("login") String login) {
         return new ResponseEntity<>(service.findByLogin(login), HttpStatus.OK);
@@ -73,39 +84,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> findByNome(@PathVariable("nome") String nome) {
         return new ResponseEntity<>(service.findByNome(nome), HttpStatus.OK);
     }
-    @GetMapping("/clientes")
-    public ResponseEntity<List<SocioDTO>> listAllCliente() {
-        return new ResponseEntity<>(service.listAllSocio(), HttpStatus.OK);
-    }
-
     @GetMapping("/dependente/{socioId}")
     public ResponseEntity<List<DependenteDTO>> listAllDependentes(@PathVariable("socioId") Long socioId) {
-        return new ResponseEntity<>(service.listAllDependentes(socioId), HttpStatus.OK);
+        return new ResponseEntity<>(service.listAllDependentesBySocio(socioId), HttpStatus.OK);
     }
 
-    @PostMapping("/socio")
-    public ResponseEntity<SocioDTO> saveSocio(@RequestBody CreateUsuarioDTO dto) {
-        return new ResponseEntity<>(service.saveSocio(dto), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/dependente")
-    public ResponseEntity<DependenteDTO> saveDependentes(@RequestBody CreateDependenteDTO dto) {
-        return new ResponseEntity<>(service.saveDependentes(dto), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/funcionario")
-    public ResponseEntity<Page<FuncionarioProjection>> findAllFincionario(Pageable pageable) {
-        return new ResponseEntity<>(service.findAllFuncionario(pageable), HttpStatus.OK);
-    }
-
-    @PostMapping("/funcionario")
-    public ResponseEntity<FuncionarioDTO> saveFuncionario(@RequestBody FuncionarioDTO dto) {
-        return new ResponseEntity<>(service.saveFuncionario(dto), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/funcionario/{idUsuario}")
-    public ResponseEntity<FuncionarioDTO> findByIDFuncionario(@PathVariable("idUsuario") Long idUsuario) {
-        return new ResponseEntity<>(service.findFuncionarioByID(idUsuario), HttpStatus.OK);
-    }
 
 }

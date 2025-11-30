@@ -5,11 +5,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
-    <changeSet id="1764189664665-1" author="basis">
-        <addColumn tableName="locacoa">
-            <column name="ativo" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
+    <changeSet id="1764456475858-1" author="basis">
+        <dropUniqueConstraint
+                tableName="usuario"
+                constraintName="uc_usuario_endereco"/>
     </changeSet>
 </databaseChangeLog>

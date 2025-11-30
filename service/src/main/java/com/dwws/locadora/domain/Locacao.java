@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "locacoa")
+@Table(name = "locacao")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,7 +34,7 @@ public class Locacao implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "data_locaoa", nullable = false)
+    @Column(name = "data_locacao", nullable = false)
     private LocalDate dataLocaoa;
 
     @Column(name = "data_pervista", nullable = false)
@@ -54,8 +54,12 @@ public class Locacao implements Serializable {
     private StatusLocacao status;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "dependente_id")
+    private Dependente dependente;
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)

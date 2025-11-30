@@ -7,6 +7,7 @@
 
 
     <changeSet id="1758569351380-1" author="basis">
+
         <createSequence incrementBy="1" sequenceName="seq_usuario" startValue="1"/>
         <createTable tableName="usuario">
             <column name="id" type="BIGINT">

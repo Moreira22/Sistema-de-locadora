@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
-    <changeSet id="1758658966193-1" author="basis">
+    <changeSet id="1764537837276-1" author="basis">
         <createSequence incrementBy="1" sequenceName="seq_locacao" startValue="1"/>
         <createTable tableName="locacoa">
             <column name="id" type="BIGINT">
@@ -25,13 +25,18 @@
             <column name="status" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="usuario_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="usuario_id" type="BIGINT"/>
+            <column name="dependente_id" type="BIGINT"/>
             <column name="item_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="ativo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+        <addForeignKeyConstraint baseColumnNames="dependente_id" baseTableName="locacoa"
+                                 constraintName="FK_LOCACOA_ON_DEPENDENTE" referencedColumnNames="id"
+                                 referencedTableName="dependente"/>
         <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="locacoa" constraintName="FK_LOCACOA_ON_ITEM"
                                  referencedColumnNames="id" referencedTableName="item"/>
         <addForeignKeyConstraint baseColumnNames="usuario_id" baseTableName="locacoa"

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,5 +40,7 @@ public class UsuarioDTO implements Serializable {
     private Long idPerfil;
 
     private EnderecoDTO endereco;
+
+    private List<DependenteDTO> dependentes;
 
 }

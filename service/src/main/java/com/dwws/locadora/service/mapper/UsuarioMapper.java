@@ -9,18 +9,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DependenteMapper.class})
 public interface UsuarioMapper extends EntityMapper<UsuarioDTO, Usuario> {
+
     @Override
     @Mapping(source = "perfil.id", target = "idPerfil")
     @Mapping(source = "endereco", target = "endereco")
+    @Mapping(source = "dependentes", target = "dependentes")
     UsuarioDTO toDto(Usuario entity);
 
     @Override
     @InheritInverseConfiguration
     Usuario toEntity(UsuarioDTO dto);
 
-    // Mapper para Endereco, caso precise customizar
     @Named("toEnderecoDTO")
     default EnderecoDTO toEnderecoDTO(Endereco endereco) {
         if (endereco == null) return null;
@@ -48,6 +49,5 @@ public interface UsuarioMapper extends EntityMapper<UsuarioDTO, Usuario> {
         endereco.setUF(dto.getUF());
         return endereco;
     }
-
-
 }
+
