@@ -1,6 +1,7 @@
 package com.dwws.locadora.controller;
 import com.dwws.locadora.service.TituloService;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
+import com.dwws.locadora.service.dto.ListagemTitulosProjection;
 import com.dwws.locadora.service.dto.TituloDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,10 @@ public class TituloController {
     @PostMapping
     public ResponseEntity<CreateTituloDTO> save(@RequestBody CreateTituloDTO dto) {
         return new ResponseEntity<>(service.saveTituloItem(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/listAll")
+    public ResponseEntity<List<ListagemTitulosProjection>> listAllTitulo() {
+        return new ResponseEntity<>(service.listarTudo(), HttpStatus.OK);
     }
 }

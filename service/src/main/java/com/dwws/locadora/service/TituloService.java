@@ -7,6 +7,7 @@ import com.dwws.locadora.service.dto.CategoriaDTO;
 import com.dwws.locadora.service.dto.ClasseDTO;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
+import com.dwws.locadora.service.dto.ListagemTitulosProjection;
 import com.dwws.locadora.service.dto.TituloDTO;
 import com.dwws.locadora.service.mapper.TituloMapper;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +74,10 @@ public class TituloService {
                 dto.getDiretorId(),
                 dto.getAtoreIds()
         );
+    }
+
+    public List<ListagemTitulosProjection> listarTudo(){
+        return repository.listagemTitulos();
     }
 
 
