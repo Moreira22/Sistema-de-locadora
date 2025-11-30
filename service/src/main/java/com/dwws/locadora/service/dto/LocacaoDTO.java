@@ -1,5 +1,4 @@
 package com.dwws.locadora.service.dto;
-
 import com.dwws.locadora.domain.enums.StatusLocacao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class LocacaoDTO implements Serializable{
     private Float multa;
     private Double valor;
     private StatusLocacao status;
-    private Long idCliente;
-    private Long IdItem;
-    private Long idFuncionario;
+    private Boolean ativo;
+    private UsuarioDTO usuario;
+    private ItemDTO item;
 }

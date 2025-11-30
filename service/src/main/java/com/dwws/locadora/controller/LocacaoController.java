@@ -1,9 +1,7 @@
 package com.dwws.locadora.controller;
 import com.dwws.locadora.service.LocacaoService;
-import com.dwws.locadora.service.dto.LocacaoListDTO;
+import com.dwws.locadora.service.dto.LocacaoDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,22 +21,22 @@ import java.util.List;
 public class LocacaoController {
     private final LocacaoService service;
     @GetMapping
-    public ResponseEntity<List<LocacaoListDTO>> findAll() {
+    public ResponseEntity<List<LocacaoDTO>> findAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idLocacao}")
-    public ResponseEntity<LocacaoListDTO> findByID(@PathVariable("idLocacao") Long idLocacao) {
+    public ResponseEntity<LocacaoDTO> findByID(@PathVariable("idLocacao") Long idLocacao) {
         return new ResponseEntity<>(service.findByID(idLocacao), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<LocacaoListDTO> save(@RequestBody LocacaoListDTO dto) {
+    public ResponseEntity<LocacaoDTO> save(@RequestBody LocacaoDTO dto) {
         return new ResponseEntity<>(service.locacaoItem(dto), HttpStatus.CREATED);
     }
 
     @PostMapping("/{idLocacao}")
-    public ResponseEntity<LocacaoListDTO> save(@PathVariable("idLocacao") Long idLocacao) {
+    public ResponseEntity<LocacaoDTO> save(@PathVariable("idLocacao") Long idLocacao) {
         return new ResponseEntity<>(service.devolucaoItem(idLocacao), HttpStatus.CREATED);
     }
 }

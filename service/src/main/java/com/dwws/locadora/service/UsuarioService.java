@@ -7,7 +7,6 @@ import com.dwws.locadora.domain.Socio;
 import com.dwws.locadora.domain.Usuario;
 import com.dwws.locadora.repository.DependenteRepository;
 import com.dwws.locadora.repository.FuncionarioRepository;
-import com.dwws.locadora.repository.PerfilRepository;
 import com.dwws.locadora.repository.SocioRepository;
 import com.dwws.locadora.repository.UsuarioRepository;
 import com.dwws.locadora.service.dto.CreateDependenteDTO;
@@ -19,7 +18,6 @@ import com.dwws.locadora.service.dto.FuncionarioProjection;
 import com.dwws.locadora.service.dto.SocioDTO;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
 import com.dwws.locadora.service.dto.UsuarioDTO;
-import com.dwws.locadora.service.dto.UsuarioListDTO;
 import com.dwws.locadora.service.exception.EntityNotFoundException;
 import com.dwws.locadora.service.mapper.DependenteMapper;
 import com.dwws.locadora.service.mapper.FuncionarioMapper;
@@ -69,8 +67,9 @@ public class UsuarioService {
                 () -> new EntityNotFoundException(MensagemUsuarioUtil.ENTITY_NOT_FOUND));
     }
 
-    public Page<UsuarioListDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<UsuarioDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDto).toList();
     }
 
     public UsuarioDTO findByID(Long id) {

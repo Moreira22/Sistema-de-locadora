@@ -1,23 +1,15 @@
 package com.dwws.locadora.service;
 
-import com.dwws.locadora.domain.Ator;
 import com.dwws.locadora.domain.TituloAtor;
-import com.dwws.locadora.domain.TituloDiretor;
 import com.dwws.locadora.repository.TituloAtorRepository;
-import com.dwws.locadora.repository.TituloDiretorRepository;
 import com.dwws.locadora.service.dto.AtorDTO;
-import com.dwws.locadora.service.dto.DiretorDTO;
 import com.dwws.locadora.service.dto.TituloAtorDTO;
-import com.dwws.locadora.service.dto.TituloDiretorDTO;
-import com.dwws.locadora.service.dto.TituloListDTO;
+import com.dwws.locadora.service.dto.TituloDTO;
 import com.dwws.locadora.service.mapper.TituloAtorMapper;
-import com.dwws.locadora.service.mapper.TituloDiretorMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -37,7 +29,7 @@ public class TituloAtorService {
 
     public TituloAtorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public void cadastraTituloAtor(TituloListDTO tituloDTO, List<Long> idsAtores) {
+    public void cadastraTituloAtor(TituloDTO tituloDTO, List<Long> idsAtores) {
         for (Long idAtor : idsAtores) {
             // Corrigido nome do método para "findById"
             AtorDTO atorDTO = atorService.findById(idAtor);

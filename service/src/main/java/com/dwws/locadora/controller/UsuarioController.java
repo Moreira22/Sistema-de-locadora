@@ -11,7 +11,6 @@ import com.dwws.locadora.service.dto.FuncionarioProjection;
 import com.dwws.locadora.service.dto.SocioDTO;
 import com.dwws.locadora.service.dto.UserPasswordChangeDTO;
 import com.dwws.locadora.service.dto.UsuarioDTO;
-import com.dwws.locadora.service.dto.UsuarioListDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,8 +40,8 @@ public class UsuarioController {
     private final PerfilService  perfilService;
 
     @GetMapping
-    public ResponseEntity<Page<UsuarioListDTO>> findAll(Pageable pageable) {
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<List<UsuarioDTO>> findAll() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
     @GetMapping("/perfil")
     public ResponseEntity<List<DropdownDTO>> fillProfileDropdown() {

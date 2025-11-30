@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,8 +23,9 @@ public class NotificacaoService {
 
     public NotificacaoDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public Page<NotificacaoDTO> findAll(Pageable pageable) {
-        return repository.listAll(pageable);
+    public List<NotificacaoDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDto).toList();
     }
 
     public NotificacaoDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }

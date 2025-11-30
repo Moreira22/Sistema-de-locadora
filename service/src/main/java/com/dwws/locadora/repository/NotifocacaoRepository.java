@@ -17,11 +17,6 @@ import java.util.Optional;
 
 @Repository
 public interface NotifocacaoRepository  extends JpaRepository<Notificacao, Long>{
-    @Query("SELECT NEW com.dwws.locadora.service.dto.NotificacaoDTO(n.id, n.mensagem, n.dataEnvio," +
-            " n.lida, n.usuario.id)"+
-            "FROM Notificacao n")
-    Page<NotificacaoDTO> listAll(Pageable pageable);
-
     List<Notificacao> findAllByUsuario_Id(Long usuarioId);
     
 }

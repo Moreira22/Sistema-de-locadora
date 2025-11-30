@@ -2,11 +2,12 @@ package com.dwws.locadora.service;
 
 import com.dwws.locadora.domain.Titulo;
 import com.dwws.locadora.domain.enums.StatusItem;
-import com.dwws.locadora.repository.TituloAtorRepository;
 import com.dwws.locadora.repository.TituloRepository;
+import com.dwws.locadora.service.dto.CategoriaDTO;
+import com.dwws.locadora.service.dto.ClasseDTO;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
 import com.dwws.locadora.service.dto.ItemDTO;
-import com.dwws.locadora.service.dto.TituloListDTO;
+import com.dwws.locadora.service.dto.TituloDTO;
 import com.dwws.locadora.service.mapper.TituloMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,42 +26,54 @@ public class TituloService {
     private final ItemService itemService;
     private final TituloDiretorService tituloDiretorService;
     private final TituloAtorService tituloAtorService;
+    private final CategoriaService categoriaService;
+    private final ClasseService classeService;
 
     public Titulo findEntity(Long id){ return repository.findById(id).orElse(null); }
 
-    public TituloListDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public TituloDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public List<TituloListDTO> findAll() {
-        return repository.listAll();
+    public List<TituloDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDto).toList();
     }
 
-    public TituloListDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
+    public TituloDTO fingByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public TituloListDTO save(TituloListDTO dto){
+    public TituloDTO save(TituloDTO dto){
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Transactional
     public CreateTituloDTO saveTituloItem(CreateTituloDTO dto) {
-        TituloListDTO tituloDTO = save(dto.getTitulo());
+        // Salva o título
+        dto.getTitulo().setClasse(classeService.findByID(dto.getClasseId()));
+        dto.getTitulo().setCategoria(categoriaService.findByID(dto.getCategoriaId()));
+        TituloDTO tituloDTO = save(dto.getTitulo());
 
-        List<ItemDTO> savedItems = new ArrayList<>();
+        // Salva itens vinculados
+        List<ItemDTO> savedItems = dto.getItemList().stream()
+                .map(item -> {
+                    item.setTitulo(tituloDTO);
+                    item.setStatus(StatusItem.DISPONIVEL);
+                    return itemService.save(item);
+                })
+                .toList();
 
-        for (ItemDTO itemDTO : dto.getItemList()) {
-            itemDTO.getTitulo().setId(tituloDTO.getId());
-            itemDTO.setStatus(StatusItem.DISPONIVEL);
-            ItemDTO savedItem = itemService.save(itemDTO);
-            savedItems.add(savedItem);
-        }
+        // Registra diretor e atores
+        tituloDiretorService.cadastraTituloDiretro(tituloDTO, dto.getDiretorId());
+        tituloAtorService.cadastraTituloAtor(tituloDTO, dto.getAtoreIds());
 
-        CreateTituloDTO response = new CreateTituloDTO();
-        response.setTitulo(tituloDTO);
-        response.setItemList(savedItems);
-
-        tituloDiretorService.cadastraTituloDiretro(tituloDTO, dto.getDiretor());
-        tituloAtorService.cadastraTituloAtor(tituloDTO, dto.getAtores());
-
-        return response;
+        // Retorna o DTO completo
+        return new CreateTituloDTO(
+                tituloDTO,
+                savedItems,
+                dto.getClasseId(),
+                dto.getCategoriaId(),
+                dto.getDiretorId(),
+                dto.getAtoreIds()
+        );
     }
+
 
 }

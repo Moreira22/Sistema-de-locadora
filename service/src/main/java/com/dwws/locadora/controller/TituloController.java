@@ -1,7 +1,7 @@
 package com.dwws.locadora.controller;
 import com.dwws.locadora.service.TituloService;
 import com.dwws.locadora.service.dto.CreateTituloDTO;
-import com.dwws.locadora.service.dto.TituloListDTO;
+import com.dwws.locadora.service.dto.TituloDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ import java.util.List;
 public class TituloController {
     private final TituloService service;
     @GetMapping
-    public ResponseEntity<List<TituloListDTO>> findAll() {
+    public ResponseEntity<List<TituloDTO>> findAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{idTitulo}")
-    public ResponseEntity<TituloListDTO> findByID(@PathVariable("idTitulo") Long idTitulo) {
+    public ResponseEntity<TituloDTO> findByID(@PathVariable("idTitulo") Long idTitulo) {
         return new ResponseEntity<>(service.findByID(idTitulo), HttpStatus.OK);
     }
 

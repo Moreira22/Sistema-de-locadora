@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 public class TituloDiretorDTO implements Serializable{
-    private  TituloListDTO titulo;
+    private  TituloDTO titulo;
     private DiretorDTO diretor;
 }
 

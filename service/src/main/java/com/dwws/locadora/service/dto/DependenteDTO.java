@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DependenteDTO extends UsuarioListDTO implements Serializable{
+public class DependenteDTO extends UsuarioDTO implements Serializable{
     private Boolean autorizadoAlocar;
     private String senha;
     private Long idSocio;

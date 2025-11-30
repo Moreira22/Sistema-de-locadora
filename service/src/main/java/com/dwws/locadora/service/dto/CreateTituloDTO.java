@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTituloDTO implements Serializable{
-    private TituloListDTO titulo;
+    private TituloDTO titulo;
     private List<ItemDTO> itemList;
-    private Long classe;
-    private Long categoria;
-    private Long diretor;
-    private List<Long> atores;
+    private Long classeId;
+    private Long categoriaId;
+    private Long diretorId;
+    private List<Long> atoreIds;
 }

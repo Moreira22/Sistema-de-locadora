@@ -3,8 +3,8 @@ package com.dwws.locadora.service;
 import com.dwws.locadora.domain.TituloDiretor;
 import com.dwws.locadora.repository.TituloDiretorRepository;
 import com.dwws.locadora.service.dto.DiretorDTO;
+import com.dwws.locadora.service.dto.TituloDTO;
 import com.dwws.locadora.service.dto.TituloDiretorDTO;
-import com.dwws.locadora.service.dto.TituloListDTO;
 import com.dwws.locadora.service.mapper.TituloDiretorMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class TituloDiretorService {
 
     public TituloDiretorDTO findByID(Long id){ return mapper.toDto(findEntity(id)); }
 
-    public void cadastraTituloDiretro(TituloListDTO tituloDTO, Long idDiretor){
+    public void cadastraTituloDiretro(TituloDTO tituloDTO, Long idDiretor){
         DiretorDTO diretorDTO = diretorService.findByID(idDiretor);
         TituloDiretorDTO tituloDiretortDTO = new TituloDiretorDTO();
         tituloDiretortDTO.setTitulo(tituloDTO);

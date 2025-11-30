@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TituloAtorDTO implements Serializable{
-    private  TituloListDTO titulo;
+    private  TituloDTO titulo;
     private AtorDTO ator;
 }

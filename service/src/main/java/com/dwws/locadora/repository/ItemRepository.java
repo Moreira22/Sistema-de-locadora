@@ -2,76 +2,17 @@ package com.dwws.locadora.repository;
 
 import com.dwws.locadora.domain.Item;
 import com.dwws.locadora.service.dto.ItemDTO;
-import com.dwws.locadora.service.dto.ItemListDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import com.dwws.locadora.domain.enums.StatusItem;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long>{
-    @Query("""
-    SELECT new com.dwws.locadora.service.dto.ItemListDTO(
-        i.id,
-        i.numeroSerie,
-        i.dataAquisicao,
-        new com.dwws.locadora.service.dto.TituloListDTO(
-            t.id,
-            t.ano,
-            t.sinopse,
-            t.nome,
-            t.imagem,
-            c.id,
-            cat.id,
-            c.nome,
-            cat.nome
-        ),
-        i.status
-    )
-    FROM Item i
-    JOIN i.titulo t
-    JOIN t.classe c
-    JOIN t.categoria cat""")
-    List<ItemListDTO> findAllItens();
-
-    @Query("""
-    SELECT new com.dwws.locadora.service.dto.ItemDTO(
-        i.id,
-        i.numeroSerie,
-        i.dataAquisicao,
-        i.status,
-        new com.dwws.locadora.service.dto.TituloDTO(
-            t.id,
-            t.ano,
-            t.sinopse,
-            t.nome,
-            t.imagem,
-            new com.dwws.locadora.service.dto.ClasseDTO(
-                c.id,
-                c.nome,
-                c.valor,
-                c.prazoDevolucao
-            ),
-            new com.dwws.locadora.service.dto.CategoriaDTO(
-                cat.id,
-                cat.nome
-            )
-        )
-    )
-    FROM Item i
-    JOIN i.titulo t
-    JOIN t.classe c
-    JOIN t.categoria cat
-    WHERE i.status = 'DISPONIVEL'
-    """)
-    List<ItemDTO> findAllItensDisponivel();
-
-
+    @Query("select i from Item i where i.status = 'DISPONIVEL'")
+    List<Item> listItemsDisponiveis();
 
     List<Item> findAllByTitulo_Id(Long tituloId);
 }
