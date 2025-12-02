@@ -3,49 +3,49 @@
 import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Search, Plus, Pencil, Trash2 } from "lucide-react"
+import {Search, Plus, Pencil, Trash2, UserPlus} from "lucide-react"
 import Link from "next/link"
-import {useUsuario} from "@/hooks/usuario";
-import {Usuario} from "@/model/usuario";
 import {useRouter} from "next/navigation";
+import {useLocacao} from "@/hooks/locacao";
+import {TableLocacao} from "@/components/tableLocacao";
 
 export default function UsuariosPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
-    const { getUsuarios, getUsuarioByNome, usuarios } = useUsuario();
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const {getLocacao, locacoes} = useLocacao();
+
 
     useEffect(() => {
         const fetchUsuarios = async () => {
-            await getUsuarios()
-            console.log("Usuarios API:", usuarios) // verifique estrutura
+            await getLocacao();
+
         }
         fetchUsuarios()
     }, []);
 
-    const filteredUsers = usuarios.filter(user =>
-        user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredLocacao = locacoes.filter(locacao =>
+        locacao.item.titulo.nome.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-    const statusVariantMap: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-        Funcionario: "default",
-        Administrador: "outline",
-        Cliente: "secondary",
-    }
+    const columns = [
+        { label: "Filme", key: "item.titulo.nome", className: "font-medium" },
+        { label: "Data Locação", key: "dataLocaoa" },
+        { label: "Locador Socio", key: "usuario.nome" },
+        { label: "Locador Dependente", key: "dependente.nome" },
+    ]
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Usuários</h1>
-                    <p className="text-muted-foreground mt-1">Gerencie os usuários do sistema</p>
+                    <h1 className="text-3xl font-bold text-foreground">Locação</h1>
+                    <p className="text-muted-foreground mt-1">Gerencie os locação</p>
                 </div>
                 <Link href="/admin/locacoes/novo">
                     <Button className="gap-2">
                         <Plus className="h-4 w-4" />
-                        Novo Usuário
+                        Novo Locação
                     </Button>
                 </Link>
             </div>
@@ -63,54 +63,27 @@ export default function UsuariosPage() {
             </div>
 
             <div className="border rounded-lg bg-card">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nome</TableHead>
-                            <TableHead>Telefone</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Perfil</TableHead>
-                            <TableHead>UF</TableHead>
-                            <TableHead>Cidade</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {Array.isArray(filteredUsers) && filteredUsers.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell className="font-medium">{user.nome}</TableCell>
-                                <TableCell>{user.telefone}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <Badge variant={user.descPerfil ? statusVariantMap[user.descPerfil] : "secondary"}>
-                                        {user.descPerfil}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>{user.endereco.uf}</TableCell>
-                                <TableCell>{user.endereco.cidade}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <Button variant="ghost" size="icon"
-                                                onClick={() => router.push(`/admin/usuarios/${user.id}`)}
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon">
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {filteredUsers.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                                    Nenhum usuário encontrado
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                <TableLocacao
+                    columns={columns}
+                    data={filteredLocacao}
+                    actions={(user) => (
+                        <>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                    setSelectedId(user.id)  // << envia ID do dependente
+                                }}
+                            >
+                                <Pencil className="h-4 w-4" />
+                            </Button>
+
+                            <Button variant="ghost" size="icon">
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </>
+                    )}
+                    />
             </div>
         </div>
     );

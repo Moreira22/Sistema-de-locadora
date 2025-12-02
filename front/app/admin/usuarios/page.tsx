@@ -5,16 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 import { Search, Plus, Pencil, Trash2, UserPlus } from "lucide-react"
-import Link from "next/link"
 import { useUsuario } from "@/hooks/usuario"
 
 import { useRouter } from "next/navigation"
-import { TableClientes } from "@/components/tableClientes"
+import {TableClientes} from "@/components/tableClientes"
 import { UsuarioForm } from "@/components/usuario-form"
 
 import {
     Dialog,
-    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,

@@ -8,11 +8,22 @@ export const useItem = () =>{
     //
     // By id / nome
     const [item, setItem] = useState<Item>();
+    const [filmes, setFilmes] = useState<Titulo[]>([]);
 
     const getItems = async (): Promise<Item[] | null> => {
         try{
             const respose = await Api.get('/item');
             setItens(respose.data);
+            return respose.data;
+        }catch (error){
+            console.error('GET', error);
+            return null;
+        }
+    };
+    const getFilmes = async (): Promise<Titulo[] | null> => {
+        try{
+            const respose = await Api.get('/titulo');
+            setFilmes(respose.data);
             return respose.data;
         }catch (error){
             console.error('GET', error);
@@ -68,5 +79,5 @@ export const useItem = () =>{
         }
     };
 
-    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, getItensDisponiovel, itens, item};
+    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, getItensDisponiovel, getFilmes, itens, item, filmes,};
 }

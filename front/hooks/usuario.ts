@@ -15,7 +15,7 @@ export const useUsuario = () => {
     const getUsuarios = async (): Promise<Usuario[]> => {
         try {
             const response = await Api.get('/usuarios');
-            setUsuarios(response.data.content);
+            setUsuarios(response.data);
             return response.data; // Isso deve ser um array
         } catch (error) {
             console.error(error);
@@ -35,7 +35,7 @@ export const useUsuario = () => {
     const getFuncionarios = async (): Promise<Funcionario[] | null> => {
         try{
             const respose = await Api.get('/usuarios/funcioarios');
-            setFuncionarios(respose.data.content);
+            setFuncionarios(respose.data);
             return respose.data;
         }catch (error){
             console.error('GET', error);

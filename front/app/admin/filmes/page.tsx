@@ -4,7 +4,6 @@ import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -14,29 +13,21 @@ import {useRouter} from "next/navigation";
 
 export default function FilmesPage() {
     const [searchTerm, setSearchTerm] = useState("");
-    const {getItems, itens } = useItem();
+    const {getFilmes, filmes } = useItem();
     const router = useRouter();
 
-    const filteredMovies = itens?.filter(
+    const filteredMovies = filmes?.filter(
         (movie) =>
-            movie.titulo.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            movie.titulo.categoriaNome.toLowerCase().includes(searchTerm.toLowerCase())
+            movie.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            movie.categoria.nome.toLowerCase().includes(searchTerm.toLowerCase())
     ) ?? [];
 
     useEffect(() => {
         const fetchItem = async () => {
-            await getItems()
+            await getFilmes()
         }
         fetchItem()
     }, [])
-
-    const statusVariantMap: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-        DISPONIVEL: "default",
-        LOCADO: "outline",
-        RESERVADO: "secondary",
-        DANIFICADO: "destructive",
-        PERDIDO: "destructive",
-    }
 
 
     return (
@@ -75,8 +66,6 @@ export default function FilmesPage() {
                             <TableHead>Ano</TableHead>
                             <TableHead>Categoria</TableHead>
                             <TableHead>Classe</TableHead>
-                            <TableHead>N. Serie</TableHead>
-                            <TableHead>Status</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -85,10 +74,10 @@ export default function FilmesPage() {
                             <TableRow key={movie.id}>
                                 <TableCell>
                                     <div className="relative w-12 h-16 rounded overflow-hidden">
-                                        {movie.titulo.imagem ? (
+                                        {movie.imagem ? (
                                             <Image
-                                                src={`data:image/jpeg;base64,${movie.titulo.imagem}`}
-                                                alt={movie.titulo.nome}
+                                                src={`data:image/jpeg;base64,${movie.imagem}`}
+                                                alt={movie.nome}
                                                 fill
                                                 className="object-cover"
                                             />
@@ -97,16 +86,10 @@ export default function FilmesPage() {
                                         )}
                                     </div>
                                 </TableCell>
-                                <TableCell className="font-medium">{movie.titulo.nome}</TableCell>
-                                <TableCell>{movie.titulo.ano}</TableCell>
-                                <TableCell>{movie.titulo.categoriaNome}</TableCell>
-                                <TableCell>{movie.titulo.classeNome}</TableCell>
-                                <TableCell>{movie.numeroSerie}</TableCell>
-                                <TableCell>
-                                    <Badge variant={movie.status ? statusVariantMap[movie.status] : "secondary"}>
-                                        {movie.status ?? "Sem status"}
-                                    </Badge>
-                                </TableCell>
+                                <TableCell className="font-medium">{movie.nome}</TableCell>
+                                <TableCell>{movie.ano}</TableCell>
+                                <TableCell>{movie.categoria.nome}</TableCell>
+                                <TableCell>{movie.classe.nome}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button variant="ghost" size="icon"

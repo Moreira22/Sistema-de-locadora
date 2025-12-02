@@ -9,5 +9,6 @@ export interface Locacao {
     valor: number;
     status: string;
     usuario: Usuario;
+    dependente: Usuario;
     item: Item;
 }
