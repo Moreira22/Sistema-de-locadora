@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface Movie {
-  id: number
-  title: string
-  rating: number
-  image: string
-  year: number
-  genre: string
-  duration: string
-  description: string
+    id: number
+    title: string
+    rating: number
+    image: string
+    year: number
+    genre: string
+    duration: string
+    description: string
+    actors: string[]   // ← ADICIONADO
 }
+
 
 interface MovieModalProps {
   movie: Movie
@@ -70,17 +72,29 @@ export function MovieModal({ movie, onClose }: MovieModalProps) {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="mb-2 text-lg font-semibold">Sinopse</h3>
-            <p className="leading-relaxed text-muted-foreground text-pretty">{movie.description}</p>
-          </div>
+            <div className="mt-6">
+                <h3 className="mb-2 text-lg font-semibold">Sinopse</h3>
+                <p className="leading-relaxed text-muted-foreground text-pretty">
+                    {movie.description}
+                </p>
+            </div>
 
-          <div className="mt-6 flex gap-3">
-            <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90">Alugar Agora</Button>
-            <Button variant="outline" className="flex-1 bg-transparent">
-              Adicionar à Lista
-            </Button>
-          </div>
+            {/* Atores */}
+            <div className="mt-6">
+                <h3 className="mb-2 text-lg font-semibold">Atores</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                    {movie.actors.join(", ")}
+                </p>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+                <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90">
+                    Alugar Agora
+                </Button>
+                <Button variant="outline" className="flex-1 bg-transparent">
+                    Adicionar à Lista
+                </Button>
+            </div>
         </div>
       </DialogContent>
     </Dialog>
