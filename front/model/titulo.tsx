@@ -25,3 +25,21 @@ export interface CreateItem{
     titulo: TituloCreate;
     itemList: ItemCreate[];
 }
+export interface FilmeDTO {
+    id: number;
+    classeId: number;
+    categoriaId: number;
+    sinopse: string | null;
+    imagem: string | null;
+    tituloNome: string;
+    tituloAno: number;
+    categoriaNome: string;
+    classeNome: string;
+    classeValor: number;
+    classePrazoDevolucao: number;
+    diretores: string;
+    atores: string;
+    itensIds: string; // Ex: "SN-2025-003,SN-003"
+    totalItens: number;
+}
+

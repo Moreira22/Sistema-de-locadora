@@ -18,8 +18,8 @@ export default function FilmesPage() {
 
     const filteredMovies = filmes?.filter(
         (movie) =>
-            movie.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            movie.categoria.nome.toLowerCase().includes(searchTerm.toLowerCase())
+            movie.tituloNome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            movie.categoriaNome.toLowerCase().includes(searchTerm.toLowerCase())
     ) ?? [];
 
     useEffect(() => {
@@ -66,6 +66,7 @@ export default function FilmesPage() {
                             <TableHead>Ano</TableHead>
                             <TableHead>Categoria</TableHead>
                             <TableHead>Classe</TableHead>
+                            <TableHead>N. Serie</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -77,7 +78,7 @@ export default function FilmesPage() {
                                         {movie.imagem ? (
                                             <Image
                                                 src={`data:image/jpeg;base64,${movie.imagem}`}
-                                                alt={movie.nome}
+                                                alt={movie.imagem}
                                                 fill
                                                 className="object-cover"
                                             />
@@ -86,10 +87,11 @@ export default function FilmesPage() {
                                         )}
                                     </div>
                                 </TableCell>
-                                <TableCell className="font-medium">{movie.nome}</TableCell>
-                                <TableCell>{movie.ano}</TableCell>
-                                <TableCell>{movie.categoria.nome}</TableCell>
-                                <TableCell>{movie.classe.nome}</TableCell>
+                                <TableCell className="font-medium">{movie.tituloNome}</TableCell>
+                                <TableCell>{movie.tituloAno}</TableCell>
+                                <TableCell>{movie.categoriaNome}</TableCell>
+                                <TableCell>{movie.classeNome}</TableCell>
+                                <TableCell>{movie.itensIds}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button variant="ghost" size="icon"

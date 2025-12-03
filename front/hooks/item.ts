@@ -1,6 +1,6 @@
 import Api from "@/server/server";
 import {Item} from "@/model/item";
-import {Titulo, CreateItem} from '@/model/titulo';
+import {Titulo, CreateItem, FilmeDTO} from '@/model/titulo';
 import {useState} from "react";
 export const useItem = () =>{
     // List
@@ -8,7 +8,8 @@ export const useItem = () =>{
     //
     // By id / nome
     const [item, setItem] = useState<Item>();
-    const [filmes, setFilmes] = useState<Titulo[]>([]);
+    const [titulo, setTitulo] = useState<Titulo[]>([]);
+    const [filmes, setFilme] = useState<FilmeDTO[]>([]);
 
     const getItems = async (): Promise<Item[] | null> => {
         try{
@@ -20,10 +21,20 @@ export const useItem = () =>{
             return null;
         }
     };
-    const getFilmes = async (): Promise<Titulo[] | null> => {
+    const getFilmes = async (): Promise<FilmeDTO[] | null> => {
+        try{
+            const respose = await Api.get('/titulo/listAll');
+            setFilme(respose.data);
+            return respose.data;
+        }catch (error){
+            console.error('GET', error);
+            return null;
+        }
+    };
+    const getTitulo = async (): Promise<Titulo[] | null> => {
         try{
             const respose = await Api.get('/titulo');
-            setFilmes(respose.data);
+            setTitulo(respose.data);
             return respose.data;
         }catch (error){
             console.error('GET', error);
@@ -79,5 +90,5 @@ export const useItem = () =>{
         }
     };
 
-    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, getItensDisponiovel, getFilmes, itens, item, filmes,};
+    return{getItems, postItem, getItemById, putitem, getItemsDisponivel, getItensDisponiovel, getFilmes, getTitulo, itens, item, titulo,filmes};
 }
