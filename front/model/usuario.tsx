@@ -28,3 +28,19 @@ export interface Socio{
     endereco: Endereco;
     dependentes: Usuario[];
 }
+
+export interface Dependente{
+    id: number;
+    login: string;
+    senha: string;
+    cpf: string;
+    email:string;
+    telefone: string;
+    nome: string;
+    perfilId: number;
+    descPerfil: string;
+    ativo: boolean;
+    endereco: Endereco;
+    dependentes: Usuario[];
+    autorizadoAlocar: boolean;
+}

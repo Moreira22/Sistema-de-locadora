@@ -1,5 +1,5 @@
 "use client"
-import {Usuario, Socio} from "@/model/usuario";
+import {Usuario, Socio, Dependente} from "@/model/usuario";
 import {Funcionario} from "@/model/funcionario";
 import Api from "@/server/server";
 import {Perfil} from "@/model/perfil";
@@ -8,6 +8,7 @@ export const useUsuario = () => {
     // List
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [socios, setSocios] = useState<Socio[]>([]);
+    const [dependentes, setDependetes] = useState<Socio[]>([]);
     const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
     // By id / nome
     const [usuario, setUsuario] = useState<Usuario | Funcionario| null>();
@@ -22,10 +23,11 @@ export const useUsuario = () => {
             return []; // Retorna um array vazio em caso de erro
         }
     };
-    const getClientes = async (): Promise<Usuario[]> => {
+
+    const getDependente = async (): Promise<Dependente[]> => {
         try {
-            const response = await Api.get('/usuarios/clientes');
-            setSocios(response.data);
+            const response = await Api.get('/usuarios/dependentes');
+            setDependetes(response.data);
             return response.data; // Isso deve ser um array
         } catch (error) {
             console.error(error);
@@ -101,5 +103,5 @@ export const useUsuario = () => {
         }
     };
 
-    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil, getClientes, usuarios, funcionarios, usuario, socios};
+    return{ getUsuarioById, getFuncionarios, getUsuarioByNome, postUsuario, getUsuarios, putUsuario, postLogin, getPerfil,getDependente, dependentes, usuarios, funcionarios, usuario, socios};
 };
