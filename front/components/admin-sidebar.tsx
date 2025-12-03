@@ -26,11 +26,11 @@ const menuItems = [
         href: "/admin/locacoes",
         icon: Film,
     },
-    {
-        title: "Notificação",
-        href: "/admin/locacao",
-        icon: Film,
-    },
+    // {
+    //     title: "Notificação",
+    //     href: "/admin/locacao",
+    //     icon: Film,
+    // },
 ]
 
 export function AdminSidebar() {
@@ -46,7 +46,10 @@ export function AdminSidebar() {
             <nav className="space-y-2">
                 {menuItems.map((item) => {
                     const Icon = item.icon
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                    const isActive =
+                        item.href === "/admin"
+                            ? pathname === "/admin"
+                            : pathname.startsWith(item.href)
 
                     return (
                         <Link

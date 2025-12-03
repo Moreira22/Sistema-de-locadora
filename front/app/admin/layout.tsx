@@ -37,7 +37,6 @@ export default function AdminLayout({children,}: { children: React.ReactNode }) 
                 <Sidebar />
                 <main className="flex-1">
                     <Topbar />
-
                     <div className="p-8">
                         {children}
                     </div>
