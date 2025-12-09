@@ -13,7 +13,7 @@ export default function UsuariosPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedId, setSelectedId] = useState<number | null>(null);
-    const {getLocacao, locacoes} = useLocacao();
+    const {getLocacao, locacoes, postDeslocarItem} = useLocacao();
 
 
     useEffect(() => {
@@ -30,10 +30,16 @@ export default function UsuariosPage() {
 
     const columns = [
         { label: "Filme", key: "item.titulo.nome", className: "font-medium" },
+        { label: "Item", key: "item.numeroSerie", className: "font-medium" },
+        { label: "Valor", key: "valor" },
         { label: "Data Locação", key: "dataLocaoa" },
-        { label: "Locador Socio", key: "usuario.nome" },
-        { label: "Locador Dependente", key: "dependente.nome" },
+        { label: "Data Prevista", key: "dataPervista" },
+        { label: "Situação", key: "status" },
     ]
+
+    const deslocarItem = async (id: number) => {
+        await postDeslocarItem(id);
+    }
 
     return (
         <div className="space-y-6">
@@ -68,17 +74,20 @@ export default function UsuariosPage() {
                     data={filteredLocacao}
                     actions={(user) => (
                         <>
-                            <Button
+                            {/* <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => {
-                                    setSelectedId(user.id)  // << envia ID do dependente
+                                    postDeslocarItem(user.id)  // << envia ID do dependente
                                 }}
                             >
                                 <Pencil className="h-4 w-4" />
-                            </Button>
+                            </Button> */}
 
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon"
+                            onClick={() => {
+                                postDeslocarItem(user.id)  // << envia ID do dependente
+                            }}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </>

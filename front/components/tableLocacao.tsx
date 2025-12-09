@@ -58,30 +58,11 @@ export function TableLocacao<T>({ columns, data, actions, renderDependentes }: T
                                 {actions && (
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-
-                                            {/* Botão de expandir */}
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => toggleExpand(item.id)}
-                                            >
-                                                <ListCollapse className="h-4 w-4" />
-                                            </Button>
-
                                             {actions(item)}
                                         </div>
                                     </TableCell>
                                 )}
                             </TableRow>
-
-                            {/* Linha expandida */}
-                            {expandedId === item.id && (
-                                <TableRow className="bg-muted/40">
-                                    <TableCell colSpan={columns.length + 1}>
-                                        {renderDependentes(item)}
-                                    </TableCell>
-                                </TableRow>
-                            )}
                         </>
                     ))}
                 </TableBody>

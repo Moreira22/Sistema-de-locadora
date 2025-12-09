@@ -9,7 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface LocacaoMapper extends EntityMapper<LocacaoDTO, Locacao> {
     @Override
-    @Mapping(source = "usuario", target = "usuario")
+    @Mapping(source = "usuario.id", target = "clienteId")
+    @Mapping(source = "dependente.id", target = "dependenteId")
     @Mapping(source = "item", target = "item")
     LocacaoDTO toDto(Locacao locacao);
 

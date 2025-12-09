@@ -111,7 +111,7 @@ public class UsuarioService {
             dto.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
 
-        dto.setIdPerfil(3L);
+        dto.setIdPerfil(4L);
 
         EnderecoDTO enderecoDTO = enderecoService.save(dto.getEndereco());
         dto.setEndereco(enderecoDTO);

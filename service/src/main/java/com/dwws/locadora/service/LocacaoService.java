@@ -40,10 +40,9 @@ public class LocacaoService {
     }
 
     public LocacaoDTO locacaoItem(LocacaoDTO dto) {
-        TipoUsuario tipo = TipoUsuario.fromCodigo(dto.getUsuario().getIdPerfil().intValue());
-
-        if (tipo == TipoUsuario.DEPENDENTE) {
-            validarDependente(dto.getUsuario().getId());
+        
+        if (dto.getDependenteId() != null) {
+            validarDependente(dto.getDependenteId());
         }
 
         dto.setAtivo(true);
@@ -75,7 +74,6 @@ public class LocacaoService {
             throw new RuntimeException("Locação não encontrada.");
         }
 
-
         if (!Boolean.TRUE.equals(locacao.getAtivo())) {
             throw new RuntimeException("Esta locação já foi finalizada.");
         }
@@ -89,6 +87,5 @@ public class LocacaoService {
 
         return save(locacao);
     }
-
 
 }

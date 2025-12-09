@@ -35,7 +35,7 @@ public class LocacaoController {
         return new ResponseEntity<>(service.locacaoItem(dto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/{idLocacao}")
+    @GetMapping("/deslocar/{idLocacao}")
     public ResponseEntity<LocacaoDTO> save(@PathVariable("idLocacao") Long idLocacao) {
         return new ResponseEntity<>(service.devolucaoItem(idLocacao), HttpStatus.CREATED);
     }

@@ -21,6 +21,7 @@ public class LocacaoDTO implements Serializable{
     private Double valor;
     private StatusLocacao status;
     private Boolean ativo;
-    private UsuarioDTO usuario;
+    private Long clienteId;
+    private Long dependenteId;
     private ItemDTO item;
 }

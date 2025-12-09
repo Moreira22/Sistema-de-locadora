@@ -36,5 +36,17 @@ export const useLocacao = () =>{
         }
     };
 
-    return{getLocacaoById,getLocacao,postLocacao, locacoes, locacao};
+    const postDeslocarItem = async (id: number): Promise<Locacao | null> => {
+        try{
+            const respose = await Api.get(`/locacao/deslocar/${id}`);
+            getLocacao();
+            return respose.data;
+        }catch (error){
+            console.error('GET', error);
+            return null;
+        }
+    };
+
+
+    return{getLocacaoById,getLocacao,postLocacao,postDeslocarItem, locacoes, locacao};
 }
